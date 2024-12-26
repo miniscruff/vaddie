@@ -11,7 +11,9 @@ type TestContainer[T any] struct {
 }
 
 func (c TestContainer[T]) Run(t *testing.T, typeName string) {
+	t.Helper()
 	t.Parallel()
+
 	for _, tc := range c.validCases {
 		t.Run(
 			strings.Join([]string{typeName, "valid", tc.Name}, "_"),
@@ -22,6 +24,7 @@ func (c TestContainer[T]) Run(t *testing.T, typeName string) {
 			},
 		)
 	}
+
 	for _, tc := range c.invalidCases {
 		t.Run(
 			strings.Join([]string{typeName, "invalid", tc.Name}, "_"),

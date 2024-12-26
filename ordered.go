@@ -66,6 +66,7 @@ func OrderedEq[T cmp.Ordered](eq T) ValidateValue[T] {
 				Help:    fmt.Sprintf("'%v' != '%v'", value, eq),
 			}
 		}
+
 		return nil
 	}
 }

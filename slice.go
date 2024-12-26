@@ -23,6 +23,7 @@ func SliceMinLength[T any](minLength int) ValidateSlice[T] {
 
 func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error {
 	errs := make([]error, 0)
+
 	for i, value := range values {
 		if v, isValidator := (any(value)).(Validator); isValidator {
 			if err := v.Validate(); err != nil {
@@ -36,7 +37,6 @@ func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error
 		if err != nil {
 			errs = append(errs, expandErrorKey(err, key))
 		}
-
 	}
 
 	return Join(errs...)
@@ -45,6 +45,7 @@ func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error
 func Dive[T any](validateValues ...ValidateValue[T]) ValidateSlice[T] {
 	return func(values []T) error {
 		errs := make([]error, 0)
+
 		for i, value := range values {
 			for _, validator := range validateValues {
 				if err := validator(value); err != nil {

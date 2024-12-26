@@ -47,6 +47,7 @@ func expandErrorKey(err error, key string) error {
 	}
 
 	ve.Key = key
+
 	return ve
 }
 
@@ -60,6 +61,7 @@ func expandErrorIndex(err error, index int) error {
 	}
 
 	ve.Index = &index
+
 	return ve
 }
 
@@ -75,6 +77,7 @@ func expandErrorKeyIndex(err error, key string, index int) error {
 
 	ve.Index = &index
 	ve.Key = key
+
 	return ve
 }
 
