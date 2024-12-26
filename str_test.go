@@ -1,44 +1,38 @@
 package vaddy
 
-import "testing"
+import (
+	"testing"
+)
 
-var strTests = TestContainer[string]{
-	validCases: []TestCase[string]{
-		{
-			Name:       "not empty",
-			Value:      "a",
-			Validation: StrNotEmpty(),
-		},
-		{
-			Name:       "min",
-			Value:      "abcdefg",
-			Validation: StrMin(5),
-		},
-		{
-			Name:       "max",
-			Value:      "abc",
-			Validation: StrMax(5),
-		},
+var strTests = []TestCase[string]{
+	{
+		Name:          "not empty",
+		ValidValues:   []string{"a"},
+		InvalidValues: []string{""},
+		Validation:    StrNotEmpty(),
 	},
-	invalidCases: []TestCase[string]{
-		{
-			Name:       "empty",
-			Value:      "",
-			Validation: StrNotEmpty(),
-		},
-		{
-			Name:       "min",
-			Value:      "ab",
-			Validation: StrMin(3),
-		},
-		{
-			Name:       "max",
-			Value:      "abcde",
-			Validation: StrMax(3),
-		},
+	{
+		Name:          "min",
+		ValidValues:   []string{"abcdefg"},
+		InvalidValues: []string{"ab"},
+		Validation:    StrMin(5),
+	},
+	{
+		Name:          "max",
+		ValidValues:   []string{"abc"},
+		InvalidValues: []string{"abcdefg"},
+		Validation:    StrMax(5),
+	},
+	{
+		Name:          "letters",
+		ValidValues:   []string{"abcd"},
+		InvalidValues: []string{"abcd1"},
+		Validation:    StrLetters(),
 	},
 }
 
-func TestValues(t *testing.T) {
-	strTests.Run(t, "string")
+func Test_Strings(t *testing.T) {
+	for _, tc := range strTests {
+		tc.Run(t)
+	}
 }

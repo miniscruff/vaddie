@@ -1,44 +1,36 @@
 package vaddy
 
 import (
-	"strings"
+	"fmt"
 	"testing"
 )
 
-type TestContainer[T any] struct {
-	validCases   []TestCase[T]
-	invalidCases []TestCase[T]
-}
-
-func (c TestContainer[T]) Run(t *testing.T, typeName string) {
-	t.Helper()
-	t.Parallel()
-
-	for _, tc := range c.validCases {
-		t.Run(
-			strings.Join([]string{typeName, "valid", tc.Name}, "_"),
-			func(t *testing.T) {
-				if err := tc.Validation(tc.Value); err != nil {
-					t.Errorf("unexpected error: %v", err)
-				}
-			},
-		)
-	}
-
-	for _, tc := range c.invalidCases {
-		t.Run(
-			strings.Join([]string{typeName, "invalid", tc.Name}, "_"),
-			func(t *testing.T) {
-				if err := tc.Validation(tc.Value); err == nil {
-					t.Error("expected error but got nil")
-				}
-			},
-		)
-	}
-}
-
 type TestCase[T any] struct {
-	Name       string
-	Value      T
-	Validation ValidateValue[T]
+	Name          string
+	ValidValues   []T
+	InvalidValues []T
+	Validation    ValidateValue[T]
+}
+
+func (c TestCase[T]) Run(t *testing.T) {
+	t.Helper()
+
+	var emptyT T
+	typeName := fmt.Sprintf("%T", emptyT)
+
+	t.Run(typeName+"valid", func(t *testing.T) {
+		for _, validValue := range c.ValidValues {
+			if err := c.Validation(validValue); err != nil {
+				t.Errorf("unexpected error with value '%v': %v", validValue, err)
+			}
+		}
+	})
+
+	t.Run(typeName+"invalid", func(t *testing.T) {
+		for _, invalidValue := range c.InvalidValues {
+			if err := c.Validation(invalidValue); err == nil {
+				t.Errorf("expected error with invalid value '%v': %v", invalidValue, err)
+			}
+		}
+	})
 }

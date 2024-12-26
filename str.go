@@ -2,6 +2,7 @@ package vaddy
 
 import (
 	"fmt"
+	"unicode"
 )
 
 func StrNotEmpty() ValidateValue[string] {
@@ -37,6 +38,22 @@ func StrMax(maxLength int) ValidateValue[string] {
 			return &ValidationError{
 				Message: "too long",
 				Help:    fmt.Sprintf("%d > %d", length, maxLength),
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrLetters() ValidateValue[string] {
+	return func(value string) error {
+		for i, v := range value {
+			if !unicode.IsLetter(v) {
+				return &ValidationError{
+					Message: "non-letter rune",
+					Index:   &i,
+					Help:    string(v),
+				}
 			}
 		}
 
