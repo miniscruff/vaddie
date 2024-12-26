@@ -21,3 +21,6 @@ lint: # Run linters
 .PHONY: format
 format: lint # alias for lint
 
+.PHONY: examples
+examples: # Run the examples
+	go run ./_examples/user
