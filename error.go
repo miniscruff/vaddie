@@ -6,15 +6,9 @@ import (
 	"strings"
 )
 
-const delimiter = ": "
-
-func toPtr[T any](value T) *T {
-	return &value
-}
-
 // ValidationError is what we return on invalid validations
 // Output of the error is a single string of:
-// `[Message] Key [@Index] [(Help)]`
+// `Key [Index] Message [(Help)]`
 type ValidationError struct {
 	Key     string
 	Message string
@@ -24,11 +18,7 @@ type ValidationError struct {
 
 func (v *ValidationError) Error() string {
 	sb := &strings.Builder{}
-
-	if v.Key != "" {
-		sb.WriteString(v.Key)
-		sb.WriteString(delimiter)
-	}
+	sb.WriteString(v.Key)
 
 	if v.Index != nil {
 		sb.WriteString("[")
@@ -57,6 +47,19 @@ func expandErrorKey(err error, key string) error {
 	}
 
 	ve.Key = key
+	return ve
+}
+
+func expandErrorIndex(err error, index int) error {
+	ve, isValidationError := err.(*ValidationError)
+	if !isValidationError {
+		return &ValidationError{
+			Message: err.Error(),
+			Index:   &index,
+		}
+	}
+
+	ve.Index = &index
 	return ve
 }
 

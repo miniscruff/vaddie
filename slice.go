@@ -45,10 +45,10 @@ func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error
 func Dive[T any](validateValues ...ValidateValue[T]) ValidateSlice[T] {
 	return func(values []T) error {
 		errs := make([]error, 0)
-		for _, value := range values {
+		for i, value := range values {
 			for _, validator := range validateValues {
 				if err := validator(value); err != nil {
-					errs = append(errs, err)
+					errs = append(errs, expandErrorIndex(err, i))
 				}
 			}
 		}

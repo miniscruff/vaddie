@@ -20,7 +20,10 @@ func StrMin(minLength int) ValidateValue[string] {
 	return func(value string) error {
 		length := len(value)
 		if length < minLength {
-			return fmt.Errorf("length too short (%d < %d)", length, minLength)
+			return &ValidationError{
+				Message: "too short",
+				Help:    fmt.Sprintf("%d < %d", length, minLength),
+			}
 		}
 
 		return nil
@@ -31,7 +34,10 @@ func StrMax(maxLength int) ValidateValue[string] {
 	return func(value string) error {
 		length := len(value)
 		if length > maxLength {
-			return fmt.Errorf("length too long (%d > %d)", length, maxLength)
+			return &ValidationError{
+				Message: "too long",
+				Help:    fmt.Sprintf("%d > %d", length, maxLength),
+			}
 		}
 
 		return nil

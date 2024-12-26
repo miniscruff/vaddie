@@ -9,8 +9,8 @@ type Validator interface {
 	Validate() error
 }
 
-// Potential name
-func Is[T any](value T, key string, validateValues ...ValidateValue[T]) error {
+// Potential name change
+func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, 0)
 	for _, validation := range validateValues {
 		err := validation(value)
@@ -23,7 +23,7 @@ func Is[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	return Join(errs...)
 }
 
-func OneOf[T any](value T, validateValues ...ValidateValue[T]) error {
+func OneOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, len(validateValues))
 	for i, validation := range validateValues {
 		err := validation(value)
@@ -31,7 +31,7 @@ func OneOf[T any](value T, validateValues ...ValidateValue[T]) error {
 			return nil
 		}
 
-		errs[i] = err
+		errs[i] = expandErrorKey(err, key)
 
 	}
 

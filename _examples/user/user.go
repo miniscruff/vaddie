@@ -18,11 +18,11 @@ type User struct {
 
 func (u *User) Validate() error {
 	return v.Join(
-		v.Is(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
-		v.Is(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
-		v.Is(u.Age, "age", v.OrderedGte(uint8(0)), v.OrderedLte(uint8(130))),
-		v.Is(u.Email, "email", v.StrNotEmpty()), // no email check yet
-		v.Is(u.FavoriteColor, "favorite_color",
+		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
+		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
+		v.AllOf(u.Age, "age", v.OrderedGte(uint8(0)), v.OrderedLte(uint8(130))),
+		v.AllOf(u.Email, "email", v.StrNotEmpty()), // no email check yet
+		v.AllOf(u.FavoriteColor, "favorite_color",
 			v.StrNotEmpty(),
 			//v.Or(
 			// hex
@@ -49,10 +49,10 @@ type Address struct {
 
 func (a *Address) Validate() error {
 	return v.Join(
-		v.Is(a.Street, "street", v.StrNotEmpty()),
-		v.Is(a.City, "city", v.StrNotEmpty()),
-		v.Is(a.Planet, "planet", v.StrNotEmpty()),
-		v.Is(a.Phone, "phone", v.StrNotEmpty()),
+		v.AllOf(a.Street, "street", v.StrNotEmpty()),
+		v.AllOf(a.City, "city", v.StrNotEmpty()),
+		v.AllOf(a.Planet, "planet", v.StrNotEmpty()),
+		v.AllOf(a.Phone, "phone", v.StrNotEmpty()),
 	)
 }
 
