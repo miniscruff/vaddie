@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// ValidationError is what we return on invalid validations
+// ValidationError is what we return on invalid validations.
 // Output of the error is a single string of:
 // `Key [Index] Message [(Help)]`
 type ValidationError struct {
