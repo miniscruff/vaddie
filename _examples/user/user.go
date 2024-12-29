@@ -21,14 +21,9 @@ func (u *User) Validate() error {
 		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.Age, "age", v.OrderedGte(uint8(0)), v.OrderedLte(uint8(130))),
-		v.AllOf(u.Email, "email", v.StrNotEmpty()), // no email check yet
+		v.AllOf(u.Email, "email", v.StrNotEmpty()), // no email check
 		v.AllOf(u.FavoriteColor, "favorite_color",
 			v.StrNotEmpty(),
-			//v.Or(
-			// hex
-			// rgb
-			// rgba
-			//),
 		),
 		// For some reason SliceMinLength cannot infer *Address
 		v.All(u.Addresses, "addresses", v.SliceMinLength[*Address](1)),
@@ -39,7 +34,6 @@ func (u *User) Validate() error {
 	)
 }
 
-// Address houses a users address information
 type Address struct {
 	Street string `json:"street"`
 	City   string `json:"city"`
