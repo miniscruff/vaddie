@@ -1,7 +1,9 @@
-package vaddy
+package vaddy_test
 
 import (
 	"fmt"
+
+	v "github.com/miniscruff/vaddy"
 )
 
 type User struct {
@@ -15,19 +17,19 @@ type User struct {
 }
 
 func (u *User) Validate() error {
-	return Join(
-		AllOf(u.FirstName, "first_name", StrMin(2), StrMax(64)),
-		AllOf(u.LastName, "last_name", StrMin(2), StrMax(64)),
-		AllOf(u.Age, "age", OrderedGte(0), OrderedLte(130)),
-		AllOf(u.Email, "email", StrNotEmpty()), // no email check
-		AllOf(u.FavoriteColor, "favorite_color",
-			StrNotEmpty(),
+	return v.Join(
+		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
+		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
+		v.AllOf(u.Age, "age", v.OrderedGte(0), v.OrderedLte(130)),
+		v.AllOf(u.Email, "email", v.StrNotEmpty()), // no email check
+		v.AllOf(u.FavoriteColor, "favorite_color",
+			v.StrNotEmpty(),
 		),
 		// For some reason SliceMinLength cannot infer *Address
-		All(u.Addresses, "addresses", SliceMinLength[*Address](1)),
-		All(u.Hobbies, "hobbies",
-			SliceMinLength[string](1),
-			Dive(StrMin(3), StrMax(64)),
+		v.All(u.Addresses, "addresses", v.SliceMinLength[*Address](1)),
+		v.All(u.Hobbies, "hobbies",
+			v.SliceMinLength[string](1),
+			v.Dive(v.StrMin(3), v.StrMax(64)),
 		),
 	)
 }
@@ -40,11 +42,11 @@ type Address struct {
 }
 
 func (a *Address) Validate() error {
-	return Join(
-		AllOf(a.Street, "street", StrNotEmpty()),
-		AllOf(a.City, "city", StrNotEmpty()),
-		AllOf(a.Planet, "planet", StrNotEmpty()),
-		AllOf(a.Phone, "phone", StrNotEmpty()),
+	return v.Join(
+		v.AllOf(a.Street, "street", v.StrNotEmpty()),
+		v.AllOf(a.City, "city", v.StrNotEmpty()),
+		v.AllOf(a.Planet, "planet", v.StrNotEmpty()),
+		v.AllOf(a.Phone, "phone", v.StrNotEmpty()),
 	)
 }
 
