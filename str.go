@@ -5,6 +5,7 @@ import (
 	"unicode"
 )
 
+// StrNotEmpty validates that a given string is not empty.
 func StrNotEmpty() ValidateValue[string] {
 	return func(value string) error {
 		if value == "" {
@@ -17,6 +18,7 @@ func StrNotEmpty() ValidateValue[string] {
 	}
 }
 
+// StrMin validates our value is at least a minimum length.
 func StrMin(minLength int) ValidateValue[string] {
 	return func(value string) error {
 		length := len(value)
@@ -31,6 +33,7 @@ func StrMin(minLength int) ValidateValue[string] {
 	}
 }
 
+// StrMax validates our value is no more then a maximum length.
 func StrMax(maxLength int) ValidateValue[string] {
 	return func(value string) error {
 		length := len(value)
@@ -45,13 +48,14 @@ func StrMax(maxLength int) ValidateValue[string] {
 	}
 }
 
+// StrLetters validates every rune is a letter.
 func StrLetters() ValidateValue[string] {
 	return func(value string) error {
 		for i, v := range value {
 			if !unicode.IsLetter(v) {
 				return &ValidationError{
 					Message: "non-letter rune",
-					Index:   &i,
+					Index:   &i, // TODO: index should be for slices, we should move this to help
 					Help:    string(v),
 				}
 			}

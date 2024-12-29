@@ -7,6 +7,7 @@ import (
 // ValidateSlice can be used to validate a slice of values.
 type ValidateSlice[T any] func(values []T) error
 
+// SliceMinLength validates that a slice has at least a minimum amount of values.
 func SliceMinLength[T any](minLength int) ValidateSlice[T] {
 	return func(values []T) error {
 		l := len(values)
@@ -21,6 +22,7 @@ func SliceMinLength[T any](minLength int) ValidateSlice[T] {
 	}
 }
 
+// All can be used to validate all the items of a slice.
 func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error {
 	errs := make([]error, 0)
 
@@ -42,6 +44,7 @@ func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error
 	return Join(errs...)
 }
 
+// Dive can be used to dive into a slice validating the values within.
 func Dive[T any](validateValues ...ValidateValue[T]) ValidateSlice[T] {
 	return func(values []T) error {
 		errs := make([]error, 0)

@@ -16,8 +16,6 @@ New validations may be added with `Exp` prefixes indicating they are still exper
 
 ## Example
 
-Full examples can be found in [the examples directory](./_examples/).
-
 ```go
 package main
 
@@ -52,6 +50,9 @@ func main() {
 ## Benchmarks
 
 Coming soon
+
+> [!NOTE]
+> If you have a particularly large or complex validation requirement, please share.
 
 ## Contributing
 

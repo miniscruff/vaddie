@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+// OrderedGt validates that an ordered value as greater than a minimum value.
 func OrderedGt[T cmp.Ordered](minValue T) ValidateValue[T] {
 	return func(value T) error {
 		if value <= minValue {
@@ -18,6 +19,7 @@ func OrderedGt[T cmp.Ordered](minValue T) ValidateValue[T] {
 	}
 }
 
+// OrderedGte validates that an ordered value as greater than or equal to a minimum value.
 func OrderedGte[T cmp.Ordered](minValue T) ValidateValue[T] {
 	return func(value T) error {
 		if value < minValue {
@@ -32,6 +34,7 @@ func OrderedGte[T cmp.Ordered](minValue T) ValidateValue[T] {
 	}
 }
 
+// OrderedLt validates that an ordered value as less than to a maximum value.
 func OrderedLt[T cmp.Ordered](maxValue T) ValidateValue[T] {
 	return func(value T) error {
 		if value >= maxValue {
@@ -45,6 +48,7 @@ func OrderedLt[T cmp.Ordered](maxValue T) ValidateValue[T] {
 	}
 }
 
+// OrderedLt validates that an ordered value as less than or equal to a maximum value.
 func OrderedLte[T cmp.Ordered](maxValue T) ValidateValue[T] {
 	return func(value T) error {
 		if value > maxValue {
@@ -58,6 +62,7 @@ func OrderedLte[T cmp.Ordered](maxValue T) ValidateValue[T] {
 	}
 }
 
+// OrderedEq validates that an ordered value is equal to another value.
 func OrderedEq[T cmp.Ordered](eq T) ValidateValue[T] {
 	return func(value T) error {
 		if value != eq {
