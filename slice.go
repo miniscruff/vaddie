@@ -23,6 +23,7 @@ func SliceMinLength[T any](minLength int) ValidateSlice[T] {
 }
 
 // All can be used to validate all the items of a slice.
+// If T implements the [Validator] interface, each value will also run that validation.
 func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error {
 	errs := make([]error, 0)
 

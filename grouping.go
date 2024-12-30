@@ -10,16 +10,8 @@ type Validator interface {
 type ValidateValue[T any] func(value T) error
 
 // AllOf validates that our value meets all of the validaton rules.
-// In addition to the validation rules, if T implements [Validator] it will also
-// be called.
 func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, 0)
-
-	if v, isValidator := (any(value)).(Validator); isValidator {
-		if err := v.Validate(); err != nil {
-			errs = append(errs, expandErrorKey(err, key))
-		}
-	}
 
 	for _, validation := range validateValues {
 		err := validation(value)
@@ -32,16 +24,8 @@ func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error
 }
 
 // OneOf validates that our value meets at least one of the validaton rules.
-// In addition to the validation rules, if T implements [Validator] it will also
-// be called. However, meeting this validation does not count as the one of.
 func OneOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, len(validateValues))
-
-	if v, isValidator := (any(value)).(Validator); isValidator {
-		if err := v.Validate(); err != nil {
-			errs = append(errs, expandErrorKey(err, key))
-		}
-	}
 
 	for i, validation := range validateValues {
 		err := validation(value)
@@ -68,6 +52,7 @@ func And[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 			}
 		}
 
+		// TODO: should this return a validation error?
 		return Join(errs...)
 	}
 }
@@ -86,6 +71,7 @@ func Or[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 			errs[i] = err
 		}
 
+		// TODO: should this return a validation error?
 		return Join(errs...)
 	}
 }
