@@ -75,3 +75,20 @@ func Or[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 		return Join(errs...)
 	}
 }
+
+func Optional[T any](value *T, key string, validateValues ...ValidateValue[T]) error {
+	if value == nil {
+		return nil
+	}
+
+	errs := make([]error, 0)
+
+	for _, validation := range validateValues {
+		err := validation(*value)
+		if err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
+
+	return Join(errs...)
+}

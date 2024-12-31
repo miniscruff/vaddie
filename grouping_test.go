@@ -72,8 +72,40 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 	},
 }
 
+type optionalTestThing struct {
+	X *int
+	Y *int
+}
+
+func toPtr[T any](value T) *T {
+	return &value
+}
+
+var optionalTests = []GroupTestCase[optionalTestThing]{
+	{
+		Name: "optionals",
+		ValidValues: []optionalTestThing{
+			{X: toPtr(5), Y: toPtr(50)},
+			{X: nil, Y: nil},
+		},
+		InvalidValues: []optionalTestThing{
+			{X: toPtr(10), Y: toPtr(10)},
+		},
+		Validation: func(v optionalTestThing) error {
+			return Join(
+				Optional(v.X, "x", OrderedGte(5)),
+				Optional(v.Y, "y", OrderedGte(25)),
+			)
+		},
+	},
+}
+
 func Test_Grouping(t *testing.T) {
 	for _, tc := range groupingTests {
+		tc.Run(t)
+	}
+
+	for _, tc := range optionalTests {
 		tc.Run(t)
 	}
 }
