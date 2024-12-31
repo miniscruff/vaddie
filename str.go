@@ -2,6 +2,7 @@ package vaddy
 
 import (
 	"fmt"
+	"strings"
 	"unicode"
 )
 
@@ -55,9 +56,102 @@ func StrLetters() ValidateValue[string] {
 			if !unicode.IsLetter(v) {
 				return &ValidationError{
 					Message: "non-letter rune",
-					Index:   &i, // TODO: index should be for slices, we should move this to help
-					Help:    string(v),
+					Help:    fmt.Sprintf("'%v' at index %d", v, i),
 				}
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrAscii validates every rune is an .
+func StrAscii() ValidateValue[string] {
+	return func(value string) error {
+		for i, v := range value {
+			if v > unicode.MaxASCII {
+				return &ValidationError{
+					Message: "non-ascii rune",
+					Help:    fmt.Sprintf("'%v' at index %d", v, i),
+				}
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrHasPrefix(prefix string) ValidateValue[string] {
+	return func(value string) error {
+		if !strings.HasPrefix(value, prefix) {
+			return &ValidationError{
+				Message: "does not have prefix",
+				Help:    fmt.Sprintf("'%v' does not have expected prefix '%s'", value, prefix),
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrNotHasPrefix(prefix string) ValidateValue[string] {
+	return func(value string) error {
+		if strings.HasPrefix(value, prefix) {
+			return &ValidationError{
+				Message: "does have prefix",
+				Help:    fmt.Sprintf("'%v' does have unexpected prefix '%s'", value, prefix),
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrHasSuffix(suffix string) ValidateValue[string] {
+	return func(value string) error {
+		if !strings.HasSuffix(value, suffix) {
+			return &ValidationError{
+				Message: "does not have suffix",
+				Help:    fmt.Sprintf("'%v' does not have expected suffix '%s'", value, suffix),
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrNotHasSuffix(suffix string) ValidateValue[string] {
+	return func(value string) error {
+		if strings.HasSuffix(value, suffix) {
+			return &ValidationError{
+				Message: "does have suffix",
+				Help:    fmt.Sprintf("'%v' does have unexpected suffix '%s'", value, suffix),
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrContains(substr string) ValidateValue[string] {
+	return func(value string) error {
+		if !strings.Contains(value, substr) {
+			return &ValidationError{
+				Message: "does not have substr",
+				Help:    fmt.Sprintf("'%v' does not have expected substr '%s'", value, substr),
+			}
+		}
+
+		return nil
+	}
+}
+
+func StrNotContains(substr string) ValidateValue[string] {
+	return func(value string) error {
+		if strings.Contains(value, substr) {
+			return &ValidationError{
+				Message: "does have substr",
+				Help:    fmt.Sprintf("'%v' does have unexpected substr '%s'", value, substr),
 			}
 		}
 
