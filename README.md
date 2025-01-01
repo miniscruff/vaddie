@@ -1,6 +1,8 @@
 # Vaddy
 
-_Badges coming soon_
+[![Go Packge](https://img.shields.io/badge/Go-Reference-grey?style=for-the-badge&logo=go&logoColor=white&label=%20&labelColor=007D9C)](https://pkg.go.dev/github.com/miniscruff/vaddy)
+[![GitHub release](https://img.shields.io/github/v/release/miniscruff/vaddy?style=for-the-badge&logo=github)](https://github.com/miniscruff/vaddy/releases)
+[![GitHub License](https://img.shields.io/github/license/miniscruff/vaddy?style=for-the-badge)](https://github.com/miniscruff/vaddy/blob/main/LICENSE)
 
 Validation library using type safe, developer friendly and extendible functions.
 
@@ -14,7 +16,9 @@ Validation library using type safe, developer friendly and extendible functions.
 Currently experimental, valdiations will be added, changed or removed.
 New validations may be added with `Exp` prefixes indicating they are still experimental.
 
-## Example
+## Examples
+
+* [User](./example_user_test.go)
 
 ```go
 package main
