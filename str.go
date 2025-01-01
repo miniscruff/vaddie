@@ -65,7 +65,7 @@ func StrLetters() ValidateValue[string] {
 	}
 }
 
-// StrAscii validates every rune is an .
+// StrAscii validates every rune is an ascii value.
 func StrAscii() ValidateValue[string] {
 	return func(value string) error {
 		for i, v := range value {
@@ -81,6 +81,7 @@ func StrAscii() ValidateValue[string] {
 	}
 }
 
+// StrHasPrefix validates our string has the provided prefix.
 func StrHasPrefix(prefix string) ValidateValue[string] {
 	return func(value string) error {
 		if !strings.HasPrefix(value, prefix) {
@@ -94,6 +95,7 @@ func StrHasPrefix(prefix string) ValidateValue[string] {
 	}
 }
 
+// StrNotHasPrefix validates our string does not have the provided prefix.
 func StrNotHasPrefix(prefix string) ValidateValue[string] {
 	return func(value string) error {
 		if strings.HasPrefix(value, prefix) {
@@ -107,6 +109,7 @@ func StrNotHasPrefix(prefix string) ValidateValue[string] {
 	}
 }
 
+// StrHasSuffix validates our string has the provided suffix.
 func StrHasSuffix(suffix string) ValidateValue[string] {
 	return func(value string) error {
 		if !strings.HasSuffix(value, suffix) {
@@ -120,6 +123,7 @@ func StrHasSuffix(suffix string) ValidateValue[string] {
 	}
 }
 
+// StrNotHasSuffix validates our string does not have the provided suffix.
 func StrNotHasSuffix(suffix string) ValidateValue[string] {
 	return func(value string) error {
 		if strings.HasSuffix(value, suffix) {
@@ -133,6 +137,7 @@ func StrNotHasSuffix(suffix string) ValidateValue[string] {
 	}
 }
 
+// StrContains validates our string contains the provided substring.
 func StrContains(substr string) ValidateValue[string] {
 	return func(value string) error {
 		if !strings.Contains(value, substr) {
@@ -146,6 +151,7 @@ func StrContains(substr string) ValidateValue[string] {
 	}
 }
 
+// StrNotContains validates our string does not contain the provided substring.
 func StrNotContains(substr string) ValidateValue[string] {
 	return func(value string) error {
 		if strings.Contains(value, substr) {

@@ -76,6 +76,8 @@ func Or[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 	}
 }
 
+// Optional will validate a value meets our rules if and only if it is not nil.
+// A nil value will always meet validation.
 func Optional[T any](value *T, key string, validateValues ...ValidateValue[T]) error {
 	if value == nil {
 		return nil
