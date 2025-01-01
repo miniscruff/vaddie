@@ -1,0 +1,38 @@
+changesDir: .changes
+unreleasedDir: unreleased
+headerPath: header.tpl.md
+changelogPath: CHANGELOG.md
+versionExt: md
+versionFormat: '## {{.Version}} on {{.Time.Format "2006-01-02"}}'
+kindFormat: '### {{.Kind}}'
+changeFormat: '* [#{{.Custom.Issue}}](https://github.com/miniscruff/vaddy/issues/{{.Custom.Issue}}) {{.Body}}'
+kinds:
+  - label: ✨ Added
+    key: added
+    auto: minor
+  - label: 🔥 Changed
+    key: changed
+    auto: minor # until v1
+  - label: ⚰️ Deprecated
+    key: deprecated
+    auto: minor
+  - label: 🗑️ Removed
+    key: removed
+    auto: minor
+  - label: 🪲 Fixed
+    key: fixed
+    auto: patch
+  - label: 🦺 Security
+    key: security
+    auto: patch
+newlines:
+  afterChangelogHeader: 1
+  afterKind: 1
+  afterChangelogVersion: 1
+  beforeKind: 1
+  endOfVersion: 1
+envPrefix: CHANGIE_
+custom:
+- key: Issue
+  type: int
+  minInt: 1
