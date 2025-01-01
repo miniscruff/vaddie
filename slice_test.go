@@ -38,6 +38,8 @@ var sliceGroupTests = []GroupTestCase[[]sliceTestThing]{
 			{
 				{X: 10, Y: 3},
 			},
+			{},
+			nil,
 		},
 		InvalidValues: [][]sliceTestThing{
 			{
