@@ -58,6 +58,12 @@ Coming soon
 > [!NOTE]
 > If you have a particularly large or complex validation requirement, please share.
 
-## Contributing
+## Need help?
+Use the [discussions page](https://github.com/miniscruff/vaddy/discussions) for help requests and how-to questions.
 
-Coming soon
+Please open [GitHub issues](https://github.com/miniscruff/vaddy/issues) for bugs and feature requests.
+File an issue before creating a pull request, unless it is something simple like a typo.
+
+## Want to Contribute?
+If you want to contribute through code or documentation, the [Contributing guide](CONTRIBUTING.md) is the place to start.
+If you need additional help create an issue or post on discussions.
