@@ -1,0 +1,5 @@
+kind: added
+body: JoinAdd to early return on first error when joining
+time: 2025-02-08T00:46:56.317165811-08:00
+custom:
+    Issue: "9"

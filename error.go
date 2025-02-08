@@ -17,6 +17,10 @@ type ValidationError struct {
 }
 
 func (v *ValidationError) Error() string {
+	if v == nil {
+		return ""
+	}
+
 	sb := &strings.Builder{}
 	sb.WriteString(v.Key)
 
@@ -26,6 +30,7 @@ func (v *ValidationError) Error() string {
 		sb.WriteString("]")
 	}
 
+	sb.WriteString(" ")
 	sb.WriteString(v.Message)
 
 	if v.Help != "" {
@@ -84,9 +89,21 @@ func expandErrorKeyIndex(err error, key string, index int) error {
 	return ve
 }
 
-// TODO: accept a Key?
+// Join combines all errors into one.
 func Join(errs ...error) error {
 	return errors.Join(errs...)
+}
+
+// JoinAnd will return the first non-nil error,
+// or nil if all errors are nil.
+func JoinAnd(errs ...error) error {
+	for _, e := range errs {
+		if e != nil {
+			return e
+		}
+	}
+
+	return nil
 }
 
 // TODO:
