@@ -1,4 +1,4 @@
-package vaddy
+package vaddie
 
 // Validator is an interface that structs can implement enabling
 // the use of wrappers.

@@ -1,4 +1,4 @@
-package vaddy
+package vaddie
 
 import (
 	"errors"

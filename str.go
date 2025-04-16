@@ -1,4 +1,4 @@
-package vaddy
+package vaddie
 
 import (
 	"fmt"
@@ -158,6 +158,34 @@ func StrNotContains(substr string) ValidateValue[string] {
 			return &ValidationError{
 				Message: "does have substr",
 				Help:    fmt.Sprintf("'%v' does have unexpected substr '%s'", value, substr),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrContainsAny validates whether any Unicode code points in chars are within value.
+func StrContainsAny(chars string) ValidateValue[string] {
+	return func(value string) error {
+		if !strings.ContainsAny(value, chars) {
+			return &ValidationError{
+				Message: "does not have chars",
+				Help:    fmt.Sprintf("'%v' does not have any of the chars '%s'", value, chars),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrNotContainsAny validates whether all Unicode code points in chars are not within value.
+func StrNotContainsAny(chars string) ValidateValue[string] {
+	return func(value string) error {
+		if strings.ContainsAny(value, chars) {
+			return &ValidationError{
+				Message: "does have chars",
+				Help:    fmt.Sprintf("'%v' does have unexpected chars '%s'", value, chars),
 			}
 		}
 

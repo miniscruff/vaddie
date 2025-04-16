@@ -1,7 +1,8 @@
-package vaddy
+package vaddie
 
 import (
 	"testing"
+	"time"
 )
 
 var orderedIntTests = []TestCase[int]{
@@ -39,6 +40,33 @@ var orderedIntTests = []TestCase[int]{
 
 func Test_Ordered(t *testing.T) {
 	for _, tc := range orderedIntTests {
+		tc.Run(t)
+	}
+}
+
+var durationTests = []TestCase[time.Duration]{
+	{
+		Name:          "equals",
+		ValidValues:   []time.Duration{5 * time.Second},
+		InvalidValues: []time.Duration{10 * time.Second},
+		Validation:    OrderedEq(5 * time.Second),
+	},
+	{
+		Name:          "lte",
+		ValidValues:   []time.Duration{10 * time.Second},
+		InvalidValues: []time.Duration{30 * time.Second},
+		Validation:    OrderedLte(15 * time.Second),
+	},
+	{
+		Name:          "gte",
+		ValidValues:   []time.Duration{30 * time.Second},
+		InvalidValues: []time.Duration{10 * time.Second},
+		Validation:    OrderedGte(15 * time.Second),
+	},
+}
+
+func Test_Duration(t *testing.T) {
+	for _, tc := range durationTests {
 		tc.Run(t)
 	}
 }

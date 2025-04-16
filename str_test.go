@@ -1,4 +1,4 @@
-package vaddy
+package vaddie
 
 import (
 	"testing"
@@ -70,6 +70,18 @@ var strTests = []TestCase[string]{
 		ValidValues:   []string{"without a dot"},
 		InvalidValues: []string{"with a dot."},
 		Validation:    StrNotContains("."),
+	},
+	{
+		Name:          "contains any",
+		ValidValues:   []string{"A", "ABCD", "alskdjflkasdfA"},
+		InvalidValues: []string{"B", "UIOUP"},
+		Validation:    StrContainsAny("A"),
+	},
+	{
+		Name:          "not contains any",
+		ValidValues:   []string{"B", "UIOUP"},
+		InvalidValues: []string{"A", "ABCD", "alskdjflkasdfA"},
+		Validation:    StrNotContainsAny("A"),
 	},
 }
 

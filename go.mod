@@ -1,3 +1,3 @@
-module github.com/miniscruff/vaddy
+module github.com/miniscruff/vaddie
 
 go 1.23
