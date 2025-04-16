@@ -1,9 +1,9 @@
-package vaddy_test
+package vaddie_test
 
 import (
 	"fmt"
 
-	v "github.com/miniscruff/vaddy"
+	v "github.com/miniscruff/vaddie"
 )
 
 type User struct {

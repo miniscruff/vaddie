@@ -1,8 +1,8 @@
-# Vaddy
+# Vaddie
 
-[![Go Packge](https://img.shields.io/badge/Go-Reference-grey?style=for-the-badge&logo=go&logoColor=white&label=%20&labelColor=007D9C)](https://pkg.go.dev/github.com/miniscruff/vaddy)
-[![GitHub release](https://img.shields.io/github/v/release/miniscruff/vaddy?style=for-the-badge&logo=github)](https://github.com/miniscruff/vaddy/releases)
-[![GitHub License](https://img.shields.io/github/license/miniscruff/vaddy?style=for-the-badge)](https://github.com/miniscruff/vaddy/blob/main/LICENSE)
+[![Go Packge](https://img.shields.io/badge/Go-Reference-grey?style=for-the-badge&logo=go&logoColor=white&label=%20&labelColor=007D9C)](https://pkg.go.dev/github.com/miniscruff/vaddie)
+[![GitHub release](https://img.shields.io/github/v/release/miniscruff/vaddie?style=for-the-badge&logo=github)](https://github.com/miniscruff/vaddie/releases)
+[![GitHub License](https://img.shields.io/github/license/miniscruff/vaddie?style=for-the-badge)](https://github.com/miniscruff/vaddie/blob/main/LICENSE)
 
 Validation library using type safe, developer friendly and extendible functions.
 
@@ -26,7 +26,7 @@ package main
 import (
 	"fmt"
 
-	v "github.com/miniscruff/vaddy"
+	v "github.com/miniscruff/vaddie"
 )
 
 type User struct {
@@ -59,9 +59,9 @@ Coming soon
 > If you have a particularly large or complex validation requirement, please share.
 
 ## Need help?
-Use the [discussions page](https://github.com/miniscruff/vaddy/discussions) for help requests and how-to questions.
+Use the [discussions page](https://github.com/miniscruff/vaddie/discussions) for help requests and how-to questions.
 
-Please open [GitHub issues](https://github.com/miniscruff/vaddy/issues) for bugs and feature requests.
+Please open [GitHub issues](https://github.com/miniscruff/vaddie/issues) for bugs and feature requests.
 File an issue before creating a pull request, unless it is something simple like a typo.
 
 ## Want to Contribute?

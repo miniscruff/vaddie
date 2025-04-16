@@ -1,4 +1,4 @@
-package vaddy
+package vaddie
 
 import (
 	"errors"
@@ -105,8 +105,3 @@ func JoinAnd(errs ...error) error {
 
 	return nil
 }
-
-// TODO:
-// ValdiationErrors type
-// Join should build ^
-// Error() for ^ should support TextMarshal, JSONMarshal
