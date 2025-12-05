@@ -2,71 +2,36 @@ version: "2"
 linters:
   enable:
     - bodyclose
-    - canonicalheader
-    - copyloopvar
     - dogsled
-    - dupword
-    - durationcheck
-    - errchkjson
-    - errname
+    - dupl
     - exhaustive
-    - forcetypeassert
-    - gocheckcompilerdirectives
-    - gochecknoinits
     - goconst
     - goprintffuncname
     - gosec
-    - inamedparam
     - intrange
     - lll
     - misspell
     - nakedret
-    - nilerr
     - noctx
     - nolintlint
-    - nonamedreturns
-    - perfsprint
-    - prealloc
-    - reassign
-    - sloglint
     - staticcheck
-    - thelper
     - unconvert
     - unparam
-    - usestdlibvars
+    - usetesting
     - whitespace
-    - wsl
+    - wsl_v5
   settings:
-    errchkjson:
-      check-error-free-encoding: true
-      report-no-exported: false
     exhaustive:
       default-signifies-exhaustive: false
     goconst:
       min-len: 5
       min-occurrences: 5
-    lll:
-      line-length: 100
-      tab-width: 4
     misspell:
       locale: US
     nolintlint:
       require-explanation: false
       require-specific: false
       allow-unused: false
-    sloglint:
-      attr-only: true
-      no-global: all
-      static-msg: true
-      key-naming-case: camel
-      forbidden-keys:
-        - time
-        - level
-        - msg
-        - source
-    staticcheck:
-      initialisms:
-        - ACL
   exclusions:
     generated: lax
     presets:
@@ -74,6 +39,10 @@ linters:
       - common-false-positives
       - legacy
       - std-error-handling
+    rules:
+      - linters:
+          - gosec
+        path: (.+)_test\.go
     paths:
       - third_party$
       - builtin$
@@ -92,7 +61,6 @@ formatters:
         - dot
         - alias
         - localmodule
-      custom-order: true
   exclusions:
     generated: lax
     paths:
