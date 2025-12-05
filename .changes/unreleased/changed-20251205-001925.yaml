@@ -1,5 +1,0 @@
-kind: changed
-body: AllOf checks if T implements validator before the other checks
-time: 2025-12-05T00:19:25.025515003-08:00
-custom:
-    Issue: "25"

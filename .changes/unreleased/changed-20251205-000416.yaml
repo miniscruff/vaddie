@@ -1,5 +1,0 @@
-kind: changed
-body: OneOf checks if T implements validator before the other checks
-time: 2025-12-05T00:04:16.812047716-08:00
-custom:
-    Issue: "26"
