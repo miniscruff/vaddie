@@ -58,10 +58,6 @@ func (c SliceTestCase[T]) Run(t *testing.T) {
 	})
 }
 
-type TestRunnable interface {
-	Run(t *testing.T)
-}
-
 type GroupTestCase[T any] struct {
 	Name          string
 	ValidValues   []T
@@ -69,11 +65,7 @@ type GroupTestCase[T any] struct {
 	Validation    func(v T) error
 }
 
-var _ TestRunnable = GroupTestCase[int]{}
-
 func (c GroupTestCase[T]) Run(t *testing.T) {
-	t.Helper()
-
 	t.Run(c.Name+"_valid", func(t *testing.T) {
 		for _, validValue := range c.ValidValues {
 			if err := c.Validation(validValue); err != nil {
