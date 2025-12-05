@@ -10,8 +10,15 @@ type Validator interface {
 type ValidateValue[T any] func(value T) error
 
 // AllOf validates that our value meets all of the validaton rules.
+// If T implements the [Validator] interface, it is validated first.
 func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, 0)
+
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
 
 	for _, validation := range validateValues {
 		err := validation(value)
@@ -24,16 +31,25 @@ func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error
 }
 
 // OneOf validates that our value meets at least one of the validaton rules.
+// If T implements the [Validator] interface, it is validated first but does not
+// immediately return nil if it passes.
+// Instead we will still go through the validate funcs until one other check passes.
 func OneOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
-	errs := make([]error, len(validateValues))
+	errs := make([]error, 0, len(validateValues))
 
-	for i, validation := range validateValues {
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
+
+	for _, validation := range validateValues {
 		err := validation(value)
 		if err == nil {
 			return nil
 		}
 
-		errs[i] = expandErrorKey(err, key)
+		errs = append(errs, expandErrorKey(err, key))
 	}
 
 	return Join(errs...)
@@ -52,7 +68,6 @@ func And[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 			}
 		}
 
-		// TODO: should this return a validation error?
 		return Join(errs...)
 	}
 }
@@ -71,19 +86,25 @@ func Or[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 			errs[i] = err
 		}
 
-		// TODO: should this return a validation error?
 		return Join(errs...)
 	}
 }
 
 // Optional will validate a value meets our rules if and only if it is not nil.
 // A nil value will always meet validation.
+// If T implements the [Validator] interface, and is not nil, that is run first.
 func Optional[T any](value *T, key string, validateValues ...ValidateValue[T]) error {
 	if value == nil {
 		return nil
 	}
 
 	errs := make([]error, 0)
+
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
 
 	for _, validation := range validateValues {
 		err := validation(*value)

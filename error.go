@@ -43,7 +43,6 @@ func (v *ValidationError) Error() string {
 }
 
 func expandErrorKey(err error, key string) error {
-	// TODO: use errors.Is???
 	ve, isValidationError := err.(*ValidationError)
 	if !isValidationError {
 		return &ValidationError{
@@ -58,7 +57,6 @@ func expandErrorKey(err error, key string) error {
 }
 
 func expandErrorIndex(err error, index int) error {
-	// TODO: use errors.Is???
 	ve, isValidationError := err.(*ValidationError)
 	if !isValidationError {
 		return &ValidationError{
@@ -73,7 +71,6 @@ func expandErrorIndex(err error, index int) error {
 }
 
 func expandErrorKeyIndex(err error, key string, index int) error {
-	// TODO: use errors.Is???
 	ve, isValidationError := err.(*ValidationError)
 	if !isValidationError {
 		return &ValidationError{

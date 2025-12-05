@@ -66,8 +66,6 @@ type GroupTestCase[T any] struct {
 }
 
 func (c GroupTestCase[T]) Run(t *testing.T) {
-	t.Helper()
-
 	t.Run(c.Name+"_valid", func(t *testing.T) {
 		for _, validValue := range c.ValidValues {
 			if err := c.Validation(validValue); err != nil {
@@ -83,4 +81,8 @@ func (c GroupTestCase[T]) Run(t *testing.T) {
 			}
 		}
 	})
+}
+
+func toPtr[T any](value T) *T {
+	return &value
 }

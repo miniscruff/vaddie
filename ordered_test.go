@@ -13,6 +13,12 @@ var orderedIntTests = []TestCase[int]{
 		Validation:    OrderedEq(15),
 	},
 	{
+		Name:          "ne",
+		ValidValues:   []int{12},
+		InvalidValues: []int{15},
+		Validation:    OrderedNe(15),
+	},
+	{
 		Name:          "gt",
 		ValidValues:   []int{16, 17},
 		InvalidValues: []int{13, 8},

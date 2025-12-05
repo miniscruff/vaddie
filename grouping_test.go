@@ -77,10 +77,6 @@ type optionalTestThing struct {
 	Y *int
 }
 
-func toPtr[T any](value T) *T {
-	return &value
-}
-
 var optionalTests = []GroupTestCase[optionalTestThing]{
 	{
 		Name: "optionals",
@@ -100,12 +96,64 @@ var optionalTests = []GroupTestCase[optionalTestThing]{
 	},
 }
 
+type thingWithValidate struct {
+	X int
+}
+
+func (v thingWithValidate) Validate() error {
+	return AllOf(v.X, "x", OrderedEq(7))
+}
+
+var thingWithValidates = []GroupTestCase[*thingWithValidate]{
+	{
+		Name: "optional with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+			nil,
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 8},
+		},
+		Validation: func(v *thingWithValidate) error {
+			return Optional(v, "v")
+		},
+	},
+	{
+		Name: "one of with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 5},
+		},
+		Validation: func(v *thingWithValidate) error {
+			return OneOf(v, "v")
+		},
+	},
+	{
+		Name: "all of with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 5},
+		},
+		Validation: func(v *thingWithValidate) error {
+			return AllOf(v, "v")
+		},
+	},
+}
+
 func Test_Grouping(t *testing.T) {
 	for _, tc := range groupingTests {
 		tc.Run(t)
 	}
 
 	for _, tc := range optionalTests {
+		tc.Run(t)
+	}
+
+	for _, tc := range thingWithValidates {
 		tc.Run(t)
 	}
 }
