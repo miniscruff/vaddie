@@ -77,10 +77,6 @@ type optionalTestThing struct {
 	Y *int
 }
 
-func toPtr[T any](value T) *T {
-	return &value
-}
-
 var optionalTests = []GroupTestCase[optionalTestThing]{
 	{
 		Name: "optionals",
@@ -113,11 +109,25 @@ var thingWithValidates = []GroupTestCase[*thingWithValidate]{
 		Name: "optional with validate",
 		ValidValues: []*thingWithValidate{
 			{X: 7},
-			// even though its invalid, there are no other optionals included
-			{X: 5},
+			nil,
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 8},
 		},
 		Validation: func(v *thingWithValidate) error {
 			return Optional(v, "v")
+		},
+	},
+	{
+		Name: "one of with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 5},
+		},
+		Validation: func(v *thingWithValidate) error {
+			return OneOf(v, "v")
 		},
 	},
 	{

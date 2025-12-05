@@ -90,3 +90,7 @@ func (c GroupTestCase[T]) Run(t *testing.T) {
 		}
 	})
 }
+
+func toPtr[T any](value T) *T {
+	return &value
+}

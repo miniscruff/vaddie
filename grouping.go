@@ -68,7 +68,6 @@ func And[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 			}
 		}
 
-		// TODO: should this return a validation error?
 		return Join(errs...)
 	}
 }
@@ -87,19 +86,25 @@ func Or[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 			errs[i] = err
 		}
 
-		// TODO: should this return a validation error?
 		return Join(errs...)
 	}
 }
 
 // Optional will validate a value meets our rules if and only if it is not nil.
 // A nil value will always meet validation.
+// If T implements the [Validator] interface, and is not nil, that is run first.
 func Optional[T any](value *T, key string, validateValues ...ValidateValue[T]) error {
 	if value == nil {
 		return nil
 	}
 
 	errs := make([]error, 0)
+
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
 
 	for _, validation := range validateValues {
 		err := validation(*value)
