@@ -10,8 +10,15 @@ type Validator interface {
 type ValidateValue[T any] func(value T) error
 
 // AllOf validates that our value meets all of the validaton rules.
+// If T implements the [Validator] interface, it is validated first.
 func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, 0)
+
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
 
 	for _, validation := range validateValues {
 		err := validation(value)
