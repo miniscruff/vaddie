@@ -75,3 +75,17 @@ func OrderedEq[T cmp.Ordered](eq T) ValidateValue[T] {
 		return nil
 	}
 }
+
+// OrderedNe validates that an ordered value is not equal to another value.
+func OrderedNe[T cmp.Ordered](eq T) ValidateValue[T] {
+	return func(value T) error {
+		if value == eq {
+			return &ValidationError{
+				Message: "values are equal",
+				Help:    fmt.Sprintf("'%v' == '%v'", value, eq),
+			}
+		}
+
+		return nil
+	}
+}
