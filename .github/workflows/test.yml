@@ -19,23 +19,22 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
           go-version-file: 'go.mod'
-
-      - name: Check out code
-        uses: actions/checkout@v6
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
           # Required: the version of golangci-lint is required and must be specified
           # without patch version: we always use the latest patch version.
-          version: v2.6
+          version: 'v2.6'
 
       - name: Test
         run: |
           go test -race -coverprofile=c.out ./...
-          go tool cover -html=c.out -o=coverage.html
 
