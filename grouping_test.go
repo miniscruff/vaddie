@@ -100,12 +100,38 @@ var optionalTests = []GroupTestCase[optionalTestThing]{
 	},
 }
 
+type optionalWithValidate struct {
+	X int
+}
+
+func (v optionalWithValidate) Validate() error {
+	return AllOf(v.X, "x", OrderedEq(7))
+}
+
+var optionalWithValidates = []GroupTestCase[*optionalWithValidate]{
+	{
+		Name: "optionals with validate",
+		ValidValues: []*optionalWithValidate{
+			{X: 7},
+			// even though its invalid, there are no other optionals included
+			{X: 5},
+		},
+		Validation: func(v *optionalWithValidate) error {
+			return Optional(v, "v")
+		},
+	},
+}
+
 func Test_Grouping(t *testing.T) {
 	for _, tc := range groupingTests {
 		tc.Run(t)
 	}
 
 	for _, tc := range optionalTests {
+		tc.Run(t)
+	}
+
+	for _, tc := range optionalWithValidates {
 		tc.Run(t)
 	}
 }

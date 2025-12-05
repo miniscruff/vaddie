@@ -24,16 +24,25 @@ func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error
 }
 
 // OneOf validates that our value meets at least one of the validaton rules.
+// If T implements the [Validator] interface, it is validated first but does not
+// immediately return nil if it passes.
+// Instead we will still go through the validate funcs until one other check passes.
 func OneOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
-	errs := make([]error, len(validateValues))
+	errs := make([]error, 0, len(validateValues))
 
-	for i, validation := range validateValues {
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
+
+	for _, validation := range validateValues {
 		err := validation(value)
 		if err == nil {
 			return nil
 		}
 
-		errs[i] = expandErrorKey(err, key)
+		errs = append(errs, expandErrorKey(err, key))
 	}
 
 	return Join(errs...)
