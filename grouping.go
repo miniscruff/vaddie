@@ -115,3 +115,32 @@ func Optional[T any](value *T, key string, validateValues ...ValidateValue[T]) e
 
 	return Join(errs...)
 }
+
+// Required will validate a value meets our rules if and only if it is not nil.
+// A nil value will error immediately.
+// If T implements the [Validator] interface, and is not nil, that is run first.
+func Required[T any](value *T, key string, validateValues ...ValidateValue[T]) error {
+	if value == nil {
+		return &ValidationError{
+			Key:     key,
+			Message: "is nil",
+		}
+	}
+
+	errs := make([]error, 0)
+
+	if v, isValidator := (any(value)).(Validator); isValidator {
+		if err := v.Validate(); err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
+
+	for _, validation := range validateValues {
+		err := validation(*value)
+		if err != nil {
+			errs = append(errs, expandErrorKey(err, key))
+		}
+	}
+
+	return Join(errs...)
+}
