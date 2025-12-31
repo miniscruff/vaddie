@@ -1,5 +1,0 @@
-kind: added
-body: Required validation func that checks a pointer is not nil before running other checks
-time: 2025-12-31T00:35:59.266160628-08:00
-custom:
-    Issue: "31"
