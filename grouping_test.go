@@ -72,25 +72,41 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 	},
 }
 
-type optionalTestThing struct {
+type testPosition struct {
 	X *int
 	Y *int
 }
 
-var optionalTests = []GroupTestCase[optionalTestThing]{
+var optionalTests = []GroupTestCase[testPosition]{
 	{
 		Name: "optionals",
-		ValidValues: []optionalTestThing{
+		ValidValues: []testPosition{
 			{X: toPtr(5), Y: toPtr(50)},
 			{X: nil, Y: nil},
 		},
-		InvalidValues: []optionalTestThing{
+		InvalidValues: []testPosition{
 			{X: toPtr(10), Y: toPtr(10)},
 		},
-		Validation: func(v optionalTestThing) error {
+		Validation: func(v testPosition) error {
 			return Join(
 				Optional(v.X, "x", OrderedGte(5)),
 				Optional(v.Y, "y", OrderedGte(25)),
+			)
+		},
+	},
+	{
+		Name: "required",
+		ValidValues: []testPosition{
+			{X: toPtr(5), Y: toPtr(50)},
+		},
+		InvalidValues: []testPosition{
+			{X: toPtr(10), Y: toPtr(10)},
+			{X: nil, Y: nil},
+		},
+		Validation: func(v testPosition) error {
+			return Join(
+				Required(v.X, "x", OrderedGte(5)),
+				Required(v.Y, "y", OrderedGte(25)),
 			)
 		},
 	},
@@ -140,6 +156,19 @@ var thingWithValidates = []GroupTestCase[*thingWithValidate]{
 		},
 		Validation: func(v *thingWithValidate) error {
 			return AllOf(v, "v")
+		},
+	},
+	{
+		Name: "required with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 5},
+			nil,
+		},
+		Validation: func(v *thingWithValidate) error {
+			return Required(v, "v")
 		},
 	},
 }
