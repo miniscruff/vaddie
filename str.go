@@ -2,6 +2,7 @@ package vaddie
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"unicode"
 )
@@ -56,7 +57,7 @@ func StrLetters() ValidateValue[string] {
 			if !unicode.IsLetter(v) {
 				return &ValidationError{
 					Message: "non-letter rune",
-					Help:    fmt.Sprintf("'%v' at index %d", v, i),
+					Help:    fmt.Sprintf("%q at index %d", v, i),
 				}
 			}
 		}
@@ -72,7 +73,7 @@ func StrAscii() ValidateValue[string] {
 			if v > unicode.MaxASCII {
 				return &ValidationError{
 					Message: "non-ascii rune",
-					Help:    fmt.Sprintf("'%v' at index %d", v, i),
+					Help:    fmt.Sprintf("%q at index %d", v, i),
 				}
 			}
 		}
@@ -87,7 +88,7 @@ func StrHasPrefix(prefix string) ValidateValue[string] {
 		if !strings.HasPrefix(value, prefix) {
 			return &ValidationError{
 				Message: "does not have prefix",
-				Help:    fmt.Sprintf("'%v' does not have expected prefix '%s'", value, prefix),
+				Help:    fmt.Sprintf("%q does not have expected prefix %q", value, prefix),
 			}
 		}
 
@@ -101,7 +102,7 @@ func StrNotHasPrefix(prefix string) ValidateValue[string] {
 		if strings.HasPrefix(value, prefix) {
 			return &ValidationError{
 				Message: "does have prefix",
-				Help:    fmt.Sprintf("'%v' does have unexpected prefix '%s'", value, prefix),
+				Help:    fmt.Sprintf("%q does have unexpected prefix %q", value, prefix),
 			}
 		}
 
@@ -115,7 +116,7 @@ func StrHasSuffix(suffix string) ValidateValue[string] {
 		if !strings.HasSuffix(value, suffix) {
 			return &ValidationError{
 				Message: "does not have suffix",
-				Help:    fmt.Sprintf("'%v' does not have expected suffix '%s'", value, suffix),
+				Help:    fmt.Sprintf("%q does not have expected suffix %q", value, suffix),
 			}
 		}
 
@@ -129,7 +130,7 @@ func StrNotHasSuffix(suffix string) ValidateValue[string] {
 		if strings.HasSuffix(value, suffix) {
 			return &ValidationError{
 				Message: "does have suffix",
-				Help:    fmt.Sprintf("'%v' does have unexpected suffix '%s'", value, suffix),
+				Help:    fmt.Sprintf("%q does have unexpected suffix %q", value, suffix),
 			}
 		}
 
@@ -143,7 +144,7 @@ func StrContains(substr string) ValidateValue[string] {
 		if !strings.Contains(value, substr) {
 			return &ValidationError{
 				Message: "does not have substr",
-				Help:    fmt.Sprintf("'%v' does not have expected substr '%s'", value, substr),
+				Help:    fmt.Sprintf("%q does not have expected substr %q", value, substr),
 			}
 		}
 
@@ -157,7 +158,7 @@ func StrNotContains(substr string) ValidateValue[string] {
 		if strings.Contains(value, substr) {
 			return &ValidationError{
 				Message: "does have substr",
-				Help:    fmt.Sprintf("'%v' does have unexpected substr '%s'", value, substr),
+				Help:    fmt.Sprintf("%q does have unexpected substr %q", value, substr),
 			}
 		}
 
@@ -171,7 +172,7 @@ func StrContainsAny(chars string) ValidateValue[string] {
 		if !strings.ContainsAny(value, chars) {
 			return &ValidationError{
 				Message: "does not have chars",
-				Help:    fmt.Sprintf("'%v' does not have any of the chars '%s'", value, chars),
+				Help:    fmt.Sprintf("%q does not have any of the chars %q", value, chars),
 			}
 		}
 
@@ -185,7 +186,48 @@ func StrNotContainsAny(chars string) ValidateValue[string] {
 		if strings.ContainsAny(value, chars) {
 			return &ValidationError{
 				Message: "does have chars",
-				Help:    fmt.Sprintf("'%v' does have unexpected chars '%s'", value, chars),
+				Help:    fmt.Sprintf("%q does have unexpected chars %q", value, chars),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrMatch validates whether the value is matched by the provided regex.
+// The regex is compiled once, if the regex is invalid every validation will fail but
+// not panic.
+// Use [StrRegexp] if you want to handle compiling the regexp yourself.
+func StrMatch(reg string) ValidateValue[string] {
+	rg, err := regexp.Compile(reg)
+
+	return func(value string) error {
+		if err != nil {
+			return &ValidationError{
+				Message: "regex did not compile",
+				Help:    fmt.Sprintf("%q is invalid", reg),
+			}
+		}
+
+		if !rg.MatchString(value) {
+			return &ValidationError{
+				Message: "does not match regex",
+				Help:    fmt.Sprintf("%q does not match", value),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrRegexp validates whether the value is matched by the provided regex.
+// Use [StrMatch] if you want vaddie to manage compiling the regexp.
+func StrRegexp(rg *regexp.Regexp) ValidateValue[string] {
+	return func(value string) error {
+		if !rg.MatchString(value) {
+			return &ValidationError{
+				Message: "does not match regex",
+				Help:    fmt.Sprintf("%q does not match", value),
 			}
 		}
 
