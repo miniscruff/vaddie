@@ -7,10 +7,16 @@ import (
 
 var strTests = []TestCase[string]{
 	{
-		Name:          "not empty",
-		ValidValues:   []string{"a"},
-		InvalidValues: []string{""},
-		Validation:    StrNotEmpty(),
+		Name:          "empty",
+		ValidValues:   []string{""},
+		InvalidValues: []string{"ab"},
+		Validation:    StrEmpty(),
+	},
+	{
+		Name:          "space",
+		ValidValues:   []string{" \t\n"},
+		InvalidValues: []string{"ab"},
+		Validation:    StrSpace(),
 	},
 	{
 		Name:          "min",
@@ -43,22 +49,10 @@ var strTests = []TestCase[string]{
 		Validation:    StrHasPrefix("abc"),
 	},
 	{
-		Name:          "not has prefix",
-		ValidValues:   []string{"abcd"},
-		InvalidValues: []string{"def"},
-		Validation:    StrNotHasPrefix("def"),
-	},
-	{
 		Name:          "has suffix",
 		ValidValues:   []string{"aaawxyz"},
 		InvalidValues: []string{"aaabcde"},
 		Validation:    StrHasSuffix("xyz"),
-	},
-	{
-		Name:          "not has suffix",
-		ValidValues:   []string{"aaabcde"},
-		InvalidValues: []string{"aaawxyz"},
-		Validation:    StrNotHasSuffix("xyz"),
 	},
 	{
 		Name:          "contains",
@@ -67,22 +61,10 @@ var strTests = []TestCase[string]{
 		Validation:    StrContains("."),
 	},
 	{
-		Name:          "not contains",
-		ValidValues:   []string{"without a dot"},
-		InvalidValues: []string{"with a dot."},
-		Validation:    StrNotContains("."),
-	},
-	{
 		Name:          "contains any",
 		ValidValues:   []string{"A", "ABCD", "alskdjflkasdfA"},
 		InvalidValues: []string{"B", "UIOUP"},
 		Validation:    StrContainsAny("A"),
-	},
-	{
-		Name:          "not contains any",
-		ValidValues:   []string{"B", "UIOUP"},
-		InvalidValues: []string{"A", "ABCD", "alskdjflkasdfA"},
-		Validation:    StrNotContainsAny("A"),
 	},
 	{
 		Name:          "match",

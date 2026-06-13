@@ -7,12 +7,30 @@ import (
 	"unicode"
 )
 
-// StrNotEmpty validates that a given string is not empty.
-func StrNotEmpty() ValidateValue[string] {
+// StrEmpty validates our value is empty.
+func StrEmpty() ValidateValue[string] {
 	return func(value string) error {
-		if value == "" {
+		length := len(value)
+		if length != 0 {
 			return &ValidationError{
-				Message: "is empty",
+				Message: "not empty",
+				Help:    fmt.Sprintf("%d > 0", length),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrSpace validates our value is entirely made up of unicode space characters.
+func StrSpace() ValidateValue[string] {
+	return func(value string) error {
+		for _, v := range value {
+			if !unicode.IsSpace(v) {
+				return &ValidationError{
+					Message: "not entirely whitespace",
+					Help:    fmt.Sprintf("%q has printable character %q", value, v),
+				}
 			}
 		}
 
@@ -96,20 +114,6 @@ func StrHasPrefix(prefix string) ValidateValue[string] {
 	}
 }
 
-// StrNotHasPrefix validates our string does not have the provided prefix.
-func StrNotHasPrefix(prefix string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.HasPrefix(value, prefix) {
-			return &ValidationError{
-				Message: "does have prefix",
-				Help:    fmt.Sprintf("%q does have unexpected prefix %q", value, prefix),
-			}
-		}
-
-		return nil
-	}
-}
-
 // StrHasSuffix validates our string has the provided suffix.
 func StrHasSuffix(suffix string) ValidateValue[string] {
 	return func(value string) error {
@@ -117,20 +121,6 @@ func StrHasSuffix(suffix string) ValidateValue[string] {
 			return &ValidationError{
 				Message: "does not have suffix",
 				Help:    fmt.Sprintf("%q does not have expected suffix %q", value, suffix),
-			}
-		}
-
-		return nil
-	}
-}
-
-// StrNotHasSuffix validates our string does not have the provided suffix.
-func StrNotHasSuffix(suffix string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.HasSuffix(value, suffix) {
-			return &ValidationError{
-				Message: "does have suffix",
-				Help:    fmt.Sprintf("%q does have unexpected suffix %q", value, suffix),
 			}
 		}
 
@@ -152,20 +142,6 @@ func StrContains(substr string) ValidateValue[string] {
 	}
 }
 
-// StrNotContains validates our string does not contain the provided substring.
-func StrNotContains(substr string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.Contains(value, substr) {
-			return &ValidationError{
-				Message: "does have substr",
-				Help:    fmt.Sprintf("%q does have unexpected substr %q", value, substr),
-			}
-		}
-
-		return nil
-	}
-}
-
 // StrContainsAny validates whether any Unicode code points in chars are within value.
 func StrContainsAny(chars string) ValidateValue[string] {
 	return func(value string) error {
@@ -173,20 +149,6 @@ func StrContainsAny(chars string) ValidateValue[string] {
 			return &ValidationError{
 				Message: "does not have chars",
 				Help:    fmt.Sprintf("%q does not have any of the chars %q", value, chars),
-			}
-		}
-
-		return nil
-	}
-}
-
-// StrNotContainsAny validates whether all Unicode code points in chars are not within value.
-func StrNotContainsAny(chars string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.ContainsAny(value, chars) {
-			return &ValidationError{
-				Message: "does have chars",
-				Help:    fmt.Sprintf("%q does have unexpected chars %q", value, chars),
 			}
 		}
 

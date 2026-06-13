@@ -21,9 +21,9 @@ func (u *User) Validate() error {
 		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.Age, "age", v.OrderedGte(0), v.OrderedLte(130)),
-		v.AllOf(u.Email, "email", v.StrNotEmpty()), // no email check
+		v.AllOf(u.Email, "email", v.Not(v.StrEmpty())), // no email check
 		v.AllOf(u.FavoriteColor, "favorite_color",
-			v.StrNotEmpty(),
+			v.Not(v.StrEmpty()),
 		),
 		// For some reason SliceMinLength cannot infer *Address
 		v.All(u.Addresses, "addresses", v.SliceMinLength[*Address](1)),
@@ -43,10 +43,10 @@ type Address struct {
 
 func (a *Address) Validate() error {
 	return v.Join(
-		v.AllOf(a.Street, "street", v.StrNotEmpty()),
-		v.AllOf(a.City, "city", v.StrNotEmpty()),
-		v.AllOf(a.Planet, "planet", v.StrNotEmpty()),
-		v.AllOf(a.Phone, "phone", v.StrNotEmpty()),
+		v.AllOf(a.Street, "street", v.Not(v.StrEmpty())),
+		v.AllOf(a.City, "city", v.Not(v.StrEmpty())),
+		v.AllOf(a.Planet, "planet", v.Not(v.StrEmpty())),
+		v.AllOf(a.Phone, "phone", v.Not(v.StrEmpty())),
 	)
 }
 

@@ -121,6 +121,21 @@ func Or[T any](validateValues ...ValidateValue[T]) ValidateValue[T] {
 	}
 }
 
+// Not flips a validation rule into one by such that a failure is a success,
+// and vice versa.
+func Not[T any](validateValue ValidateValue[T]) ValidateValue[T] {
+	return func(value T) error {
+		err := validateValue(value)
+		if err != nil {
+			return nil
+		}
+
+		return &ValidationError{
+			Message: "not validation was successful",
+		}
+	}
+}
+
 // Optional will validate a value meets our rules if and only if it is not nil.
 // A nil value will always meet validation.
 // If T implements the [Validator] interface, and is not nil, that is run first.

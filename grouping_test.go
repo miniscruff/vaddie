@@ -97,6 +97,21 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 			)
 		},
 	},
+	{
+		Name: "not",
+		ValidValues: []groupTestThing{
+			{X: 12, Y: 17},
+		},
+		InvalidValues: []groupTestThing{
+			{X: 15, Y: 5},
+		},
+		Validation: func(v groupTestThing) error {
+			return Join(
+				AllOf(v.X, "x", Not(Or(OrderedEq(15), OrderedEq(5)))),
+				AllOf(v.Y, "y", Not(Or(OrderedEq(15), OrderedEq(5)))),
+			)
+		},
+	},
 }
 
 type testPosition struct {
