@@ -41,6 +41,33 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 		},
 	},
 	{
+		Name: "join and one of",
+		ValidValues: []groupTestThing{
+			{X: 10, Y: 10},
+		},
+		InvalidValues: []groupTestThing{
+			{X: 5, Y: 5},
+		},
+		Validation: func(v groupTestThing) error {
+			return Join(
+				OneOf(v.X, "x", OrderedEq(11), OrderedEq(10)),
+				OneOf(v.Y, "y", OrderedEq(15), OrderedEq(10)),
+			)
+		},
+	},
+	{
+		Name: "join and one of with multiple passing",
+		ValidValues: []groupTestThing{
+			{X: 10},
+		},
+		InvalidValues: []groupTestThing{
+			{X: 5},
+		},
+		Validation: func(v groupTestThing) error {
+			return OneOf(v.X, "x", OrderedEq(10), OrderedEq(5), OrderedLt(7))
+		},
+	},
+	{
 		Name: "with and",
 		ValidValues: []groupTestThing{
 			{X: 10, Y: 10},
@@ -156,6 +183,18 @@ var thingWithValidates = []GroupTestCase[*thingWithValidate]{
 		},
 		Validation: func(v *thingWithValidate) error {
 			return AllOf(v, "v")
+		},
+	},
+	{
+		Name: "one of with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 5},
+		},
+		Validation: func(v *thingWithValidate) error {
+			return OneOf(v, "v")
 		},
 	},
 	{
