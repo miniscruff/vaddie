@@ -1,0 +1,5 @@
+kind: removed
+body: StrNotHasSuffix validation, use Not(StrHasSuffix)
+time: 2026-06-13T16:54:01.459911601-07:00
+custom:
+    Issue: "44"

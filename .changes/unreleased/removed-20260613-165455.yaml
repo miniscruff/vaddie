@@ -1,0 +1,5 @@
+kind: removed
+body: StrNotContainsAny validation, use Not(StrContainsAny)
+time: 2026-06-13T16:54:55.218801976-07:00
+custom:
+    Issue: "44"
