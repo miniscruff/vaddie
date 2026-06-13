@@ -37,6 +37,32 @@ func SliceMaxLength[T any](maxLength int) ValidateSlice[T] {
 	}
 }
 
+// SliceUnique validates that all items in the slice are unique.
+func SliceUnique[T comparable]() ValidateSlice[T] {
+	return func(values []T) error {
+		counts := make(map[T]int, len(values))
+		for _, v := range values {
+			counts[v]++
+		}
+
+		dupes := make([]T, 0)
+		for v, count := range counts {
+			if count > 1 {
+				dupes = append(dupes, v)
+			}
+		}
+
+		if len(dupes) > 0 {
+			return &ValidationError{
+				Message: "value found in slice more than once",
+				Help:    fmt.Sprintf("%v repeated", dupes),
+			}
+		}
+
+		return nil
+	}
+}
+
 // All can be used to validate all the items of a slice.
 // If T implements the [Validator] interface, each value will also run that validation.
 func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error {

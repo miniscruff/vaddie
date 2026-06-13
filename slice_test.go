@@ -17,6 +17,12 @@ var sliceIntTests = []SliceTestCase[int]{
 		InvalidValues: [][]int{{7, 3, 18, 34}},
 		Validation:    SliceMaxLength[int](2),
 	},
+	{
+		Name:          "unique",
+		ValidValues:   [][]int{{15, 18}},
+		InvalidValues: [][]int{{7, 3, 18, 7}},
+		Validation:    SliceUnique[int](),
+	},
 }
 
 func Test_Slice(t *testing.T) {
