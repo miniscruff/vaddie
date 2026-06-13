@@ -91,9 +91,11 @@ func Test_Regexp(t *testing.T) {
 	if err := StrRegexp(rg)("abz"); err != nil {
 		t.Errorf("unexpected validation error")
 	}
+
 	if err := StrRegexp(rg)("abd"); err != nil {
 		t.Errorf("unexpected validation error")
 	}
+
 	if err := StrRegexp(rg)("zdf"); err == nil {
 		t.Errorf("expected validation error")
 	}
