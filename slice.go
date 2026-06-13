@@ -2,6 +2,7 @@ package vaddie
 
 import (
 	"fmt"
+	"slices"
 )
 
 // ValidateSlice can be used to validate a slice of values.
@@ -56,6 +57,69 @@ func SliceUnique[T comparable]() ValidateSlice[T] {
 			return &ValidationError{
 				Message: "value found in slice more than once",
 				Help:    fmt.Sprintf("%v repeated", dupes),
+			}
+		}
+
+		return nil
+	}
+}
+
+// SliceContains validates that the value is contained in the slice at least once.
+func SliceContains[T comparable](v T) ValidateSlice[T] {
+	return func(values []T) error {
+		if !slices.Contains(values, v) {
+			return &ValidationError{
+				Message: "value not found in slice",
+				Help:    fmt.Sprintf("%v missing", v),
+			}
+		}
+
+		return nil
+	}
+}
+
+// SliceMinContains validates that the value is contained in the slice at least a minimum set of times.
+func SliceMinContains[T comparable](v T, minCount int) ValidateSlice[T] {
+	return func(values []T) error {
+		if len(values) < minCount {
+			return &ValidationError{
+				Message: "values is not long enough to contain enough values",
+				Help:    fmt.Sprintf("expecting %d of value %v but only has %d values", minCount, v, len(values)),
+			}
+		}
+
+		count := 0
+		for _, sv := range values {
+			if sv == v {
+				count++
+			}
+		}
+
+		if count < minCount {
+			return &ValidationError{
+				Message: "value not too many times",
+				Help:    fmt.Sprintf("%v found %d < %d", v, count, minCount),
+			}
+		}
+
+		return nil
+	}
+}
+
+// SliceMaxContains validates that the value is contained in the slice at most a maximum set of times.
+func SliceMaxContains[T comparable](v T, maxCount int) ValidateSlice[T] {
+	return func(values []T) error {
+		count := 0
+		for _, sv := range values {
+			if sv == v {
+				count++
+			}
+		}
+
+		if count > maxCount {
+			return &ValidationError{
+				Message: "value not found enough times",
+				Help:    fmt.Sprintf("%v found %d > %d", v, count, maxCount),
 			}
 		}
 

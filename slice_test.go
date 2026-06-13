@@ -23,6 +23,27 @@ var sliceIntTests = []SliceTestCase[int]{
 		InvalidValues: [][]int{{7, 3, 18, 7}},
 		Validation:    SliceUnique[int](),
 	},
+	{
+		Name:          "contains",
+		ValidValues:   [][]int{{15, 18, 24}},
+		InvalidValues: [][]int{{7, 3, 18, 7}},
+		Validation:    SliceContains(24),
+	},
+	{
+		Name:          "min contains",
+		ValidValues:   [][]int{{15, 18, 21, 21}},
+		InvalidValues: [][]int{
+			{7, 3, 18, 7, 21},
+			{7},
+		},
+		Validation:    SliceMinContains(21, 2),
+	},
+	{
+		Name:          "max contains",
+		ValidValues:   [][]int{{15, 18, 23}},
+		InvalidValues: [][]int{{23, 7, 3, 18, 7, 23, 23}},
+		Validation:    SliceMaxContains(23, 2),
+	},
 }
 
 func Test_Slice(t *testing.T) {
