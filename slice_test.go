@@ -30,13 +30,13 @@ var sliceIntTests = []SliceTestCase[int]{
 		Validation:    SliceContains(24),
 	},
 	{
-		Name:          "min contains",
-		ValidValues:   [][]int{{15, 18, 21, 21}},
+		Name:        "min contains",
+		ValidValues: [][]int{{15, 18, 21, 21}},
 		InvalidValues: [][]int{
 			{7, 3, 18, 7, 21},
 			{7},
 		},
-		Validation:    SliceMinContains(21, 2),
+		Validation: SliceMinContains(21, 2),
 	},
 	{
 		Name:          "max contains",

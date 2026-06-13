@@ -4,7 +4,7 @@ import "fmt"
 
 type WholeNumeric interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64 |
-	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
 }
 
 type FractionalNumeric interface {
@@ -13,8 +13,8 @@ type FractionalNumeric interface {
 
 type Numeric interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64 |
-	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
-	~float32 | ~float64
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+		~float32 | ~float64
 }
 
 func NumericMultipleOf[T WholeNumeric](mult T) ValidateValue[T] {
@@ -26,7 +26,7 @@ func NumericMultipleOf[T WholeNumeric](mult T) ValidateValue[T] {
 			}
 		}
 
-		if value % mult != 0 {
+		if value%mult != 0 {
 			return &ValidationError{
 				Message: "values are not multiples",
 				Help:    fmt.Sprintf("%d %% %d != 0", value, mult),

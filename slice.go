@@ -47,6 +47,7 @@ func SliceUnique[T comparable]() ValidateSlice[T] {
 		}
 
 		dupes := make([]T, 0)
+
 		for v, count := range counts {
 			if count > 1 {
 				dupes = append(dupes, v)
@@ -89,6 +90,7 @@ func SliceMinContains[T comparable](v T, minCount int) ValidateSlice[T] {
 		}
 
 		count := 0
+
 		for _, sv := range values {
 			if sv == v {
 				count++
@@ -110,6 +112,7 @@ func SliceMinContains[T comparable](v T, minCount int) ValidateSlice[T] {
 func SliceMaxContains[T comparable](v T, maxCount int) ValidateSlice[T] {
 	return func(values []T) error {
 		count := 0
+
 		for _, sv := range values {
 			if sv == v {
 				count++
