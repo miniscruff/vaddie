@@ -30,11 +30,11 @@ func AllOf[T any](value T, key string, validateValues ...ValidateValue[T]) error
 	return Join(errs...)
 }
 
-// OneOf validates that our value meets at least one of the validaton rules.
+// AnyOf validates that our value meets at least one of the validaton rules.
 // If T implements the [Validator] interface, it is validated first but does not
 // immediately return nil if it passes.
-// Instead we will still go through the validate funcs until one other check passes.
-func OneOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
+// Instead it still goes through the validate funcs until one other check passes.
+func AnyOf[T any](value T, key string, validateValues ...ValidateValue[T]) error {
 	errs := make([]error, 0, len(validateValues))
 
 	if v, isValidator := (any(value)).(Validator); isValidator {
