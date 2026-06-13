@@ -22,6 +22,21 @@ func SliceMinLength[T any](minLength int) ValidateSlice[T] {
 	}
 }
 
+// SliceMaxLength validates that a slice has no more than a maximum amount of values.
+func SliceMaxLength[T any](maxLength int) ValidateSlice[T] {
+	return func(values []T) error {
+		l := len(values)
+		if l > maxLength {
+			return &ValidationError{
+				Message: "too long",
+				Help:    fmt.Sprintf("%d > %d", l, maxLength),
+			}
+		}
+
+		return nil
+	}
+}
+
 // All can be used to validate all the items of a slice.
 // If T implements the [Validator] interface, each value will also run that validation.
 func All[T any](values []T, key string, validateSlice ...ValidateSlice[T]) error {

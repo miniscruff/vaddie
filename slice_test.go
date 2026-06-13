@@ -6,10 +6,16 @@ import (
 
 var sliceIntTests = []SliceTestCase[int]{
 	{
-		Name:          "eq",
+		Name:          "min",
 		ValidValues:   [][]int{{15, 18}},
 		InvalidValues: [][]int{{7}},
 		Validation:    SliceMinLength[int](2),
+	},
+	{
+		Name:          "max",
+		ValidValues:   [][]int{{15, 18}},
+		InvalidValues: [][]int{{7, 3, 18, 34}},
+		Validation:    SliceMaxLength[int](2),
 	},
 }
 

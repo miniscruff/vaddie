@@ -1,0 +1,5 @@
+kind: added
+body: SliceMaxItems validation
+time: 2026-06-13T13:12:15.330683304-07:00
+custom:
+    Issue: "36"
