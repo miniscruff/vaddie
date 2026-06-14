@@ -59,25 +59,3 @@ func MapRequiredKeys[K comparable, V any](reqs ...K) ValidateValue[map[K]V] {
 		return nil
 	}
 }
-
-func MapDependantRequired[K comparable, V any](reqs ...K) ValidateValue[map[K]V] {
-	return func(value map[K]V) error {
-		reqLookup := make(map[K]struct{}, len(reqs))
-		for _, v := range reqs {
-			reqLookup[v] = struct{}{}
-		}
-
-		for k := range value {
-			delete(reqLookup, k)
-		}
-
-		if len(reqLookup) != 0 {
-			return &ValidationError{
-				Message: "required keys not found in map",
-				Help:    fmt.Sprintf("%v are missing from map", slices.Collect(maps.Keys(reqLookup))),
-			}
-		}
-
-		return nil
-	}
-}
