@@ -6,8 +6,8 @@ import (
 
 var mapStringIntTests = []TestCase[map[string]int]{
 	{
-		Name:          "min",
-		ValidValues:   []map[string]int{
+		Name: "min",
+		ValidValues: []map[string]int{
 			{
 				"a": 5,
 				"b": 3,
@@ -19,11 +19,11 @@ var mapStringIntTests = []TestCase[map[string]int]{
 				"a": 5,
 			},
 		},
-		Validation:    MapMinLength[string, int](3),
+		Validation: MapMinLength[string, int](3),
 	},
 	{
-		Name:          "max",
-		ValidValues:   []map[string]int{
+		Name: "max",
+		ValidValues: []map[string]int{
 			{
 				"a": 5,
 			},
@@ -35,7 +35,22 @@ var mapStringIntTests = []TestCase[map[string]int]{
 				"c": 1,
 			},
 		},
-		Validation:    MapMaxLength[string, int](2),
+		Validation: MapMaxLength[string, int](2),
+	},
+	{
+		Name: "required",
+		ValidValues: []map[string]int{
+			{
+				"a": 5,
+				"b": 3,
+			},
+		},
+		InvalidValues: []map[string]int{
+			{
+				"a": 5,
+			},
+		},
+		Validation: MapRequiredKeys[string, int]("a", "b"),
 	},
 }
 
