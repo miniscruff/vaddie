@@ -26,6 +26,21 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 		},
 	},
 	{
+		Name: "join and any of",
+		ValidValues: []groupTestThing{
+			{X: 10, Y: 10},
+		},
+		InvalidValues: []groupTestThing{
+			{X: 5, Y: 5},
+		},
+		Validation: func(v groupTestThing) error {
+			return Join(
+				AnyOf(v.X, "x", OrderedEq(11), OrderedEq(10)),
+				AnyOf(v.Y, "y", OrderedEq(15), OrderedEq(10)),
+			)
+		},
+	},
+	{
 		Name: "join and one of",
 		ValidValues: []groupTestThing{
 			{X: 10, Y: 10},
@@ -38,6 +53,18 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 				OneOf(v.X, "x", OrderedEq(11), OrderedEq(10)),
 				OneOf(v.Y, "y", OrderedEq(15), OrderedEq(10)),
 			)
+		},
+	},
+	{
+		Name: "join and one of with multiple passing",
+		ValidValues: []groupTestThing{
+			{X: 10},
+		},
+		InvalidValues: []groupTestThing{
+			{X: 5},
+		},
+		Validation: func(v groupTestThing) error {
+			return OneOf(v.X, "x", OrderedEq(10), OrderedEq(5), OrderedLt(7))
 		},
 	},
 	{
@@ -67,6 +94,21 @@ var groupingTests = []GroupTestCase[groupTestThing]{
 			return Join(
 				AllOf(v.X, "x", Or(OrderedGte(15), OrderedLte(5))),
 				AllOf(v.Y, "y", Or(OrderedGte(15), OrderedLte(5))),
+			)
+		},
+	},
+	{
+		Name: "not",
+		ValidValues: []groupTestThing{
+			{X: 12, Y: 17},
+		},
+		InvalidValues: []groupTestThing{
+			{X: 15, Y: 5},
+		},
+		Validation: func(v groupTestThing) error {
+			return Join(
+				AllOf(v.X, "x", Not(Or(OrderedEq(15), OrderedEq(5)))),
+				AllOf(v.Y, "y", Not(Or(OrderedEq(15), OrderedEq(5)))),
 			)
 		},
 	},
@@ -135,7 +177,7 @@ var thingWithValidates = []GroupTestCase[*thingWithValidate]{
 		},
 	},
 	{
-		Name: "one of with validate",
+		Name: "any of with validate",
 		ValidValues: []*thingWithValidate{
 			{X: 7},
 		},
@@ -143,7 +185,7 @@ var thingWithValidates = []GroupTestCase[*thingWithValidate]{
 			{X: 5},
 		},
 		Validation: func(v *thingWithValidate) error {
-			return OneOf(v, "v")
+			return AnyOf(v, "v")
 		},
 	},
 	{
@@ -156,6 +198,18 @@ var thingWithValidates = []GroupTestCase[*thingWithValidate]{
 		},
 		Validation: func(v *thingWithValidate) error {
 			return AllOf(v, "v")
+		},
+	},
+	{
+		Name: "one of with validate",
+		ValidValues: []*thingWithValidate{
+			{X: 7},
+		},
+		InvalidValues: []*thingWithValidate{
+			{X: 5},
+		},
+		Validation: func(v *thingWithValidate) error {
+			return OneOf(v, "v")
 		},
 	},
 	{

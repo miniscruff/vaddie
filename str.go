@@ -2,16 +2,37 @@ package vaddie
 
 import (
 	"fmt"
+	"net/mail"
+	"regexp"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
-// StrNotEmpty validates that a given string is not empty.
-func StrNotEmpty() ValidateValue[string] {
+// StrEmpty validates our value is empty.
+func StrEmpty() ValidateValue[string] {
 	return func(value string) error {
-		if value == "" {
+		length := len(value)
+		if length != 0 {
 			return &ValidationError{
-				Message: "is empty",
+				Message: "not empty",
+				Help:    fmt.Sprintf("%d > 0", length),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrSpace validates our value is entirely made up of unicode space characters.
+func StrSpace() ValidateValue[string] {
+	return func(value string) error {
+		for _, v := range value {
+			if !unicode.IsSpace(v) {
+				return &ValidationError{
+					Message: "not entirely whitespace",
+					Help:    fmt.Sprintf("%q has printable character %q", value, v),
+				}
 			}
 		}
 
@@ -49,6 +70,38 @@ func StrMax(maxLength int) ValidateValue[string] {
 	}
 }
 
+// StrUnicodeMin validates our value is at least a minimum length of unicode characters.
+// This properly compares strings that include things such as emojis and CJK symbols.
+func StrUnicodeMin(minLength int) ValidateValue[string] {
+	return func(value string) error {
+		length := utf8.RuneCountInString(value)
+		if length < minLength {
+			return &ValidationError{
+				Message: "unicode length too short",
+				Help:    fmt.Sprintf("%d < %d", length, minLength),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrUnicodeMax validates our value is no more then a maximum length of unicode characters.
+// This properly compares strings that include things such as emojis and CJK symbols.
+func StrUnicodeMax(maxLength int) ValidateValue[string] {
+	return func(value string) error {
+		length := utf8.RuneCountInString(value)
+		if length > maxLength {
+			return &ValidationError{
+				Message: "unicode length too long",
+				Help:    fmt.Sprintf("%d > %d", length, maxLength),
+			}
+		}
+
+		return nil
+	}
+}
+
 // StrLetters validates every rune is a letter.
 func StrLetters() ValidateValue[string] {
 	return func(value string) error {
@@ -56,7 +109,7 @@ func StrLetters() ValidateValue[string] {
 			if !unicode.IsLetter(v) {
 				return &ValidationError{
 					Message: "non-letter rune",
-					Help:    fmt.Sprintf("'%v' at index %d", v, i),
+					Help:    fmt.Sprintf("%q at index %d", v, i),
 				}
 			}
 		}
@@ -72,7 +125,7 @@ func StrAscii() ValidateValue[string] {
 			if v > unicode.MaxASCII {
 				return &ValidationError{
 					Message: "non-ascii rune",
-					Help:    fmt.Sprintf("'%v' at index %d", v, i),
+					Help:    fmt.Sprintf("%q at index %d", v, i),
 				}
 			}
 		}
@@ -87,21 +140,7 @@ func StrHasPrefix(prefix string) ValidateValue[string] {
 		if !strings.HasPrefix(value, prefix) {
 			return &ValidationError{
 				Message: "does not have prefix",
-				Help:    fmt.Sprintf("'%v' does not have expected prefix '%s'", value, prefix),
-			}
-		}
-
-		return nil
-	}
-}
-
-// StrNotHasPrefix validates our string does not have the provided prefix.
-func StrNotHasPrefix(prefix string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.HasPrefix(value, prefix) {
-			return &ValidationError{
-				Message: "does have prefix",
-				Help:    fmt.Sprintf("'%v' does have unexpected prefix '%s'", value, prefix),
+				Help:    fmt.Sprintf("%q does not have expected prefix %q", value, prefix),
 			}
 		}
 
@@ -115,21 +154,7 @@ func StrHasSuffix(suffix string) ValidateValue[string] {
 		if !strings.HasSuffix(value, suffix) {
 			return &ValidationError{
 				Message: "does not have suffix",
-				Help:    fmt.Sprintf("'%v' does not have expected suffix '%s'", value, suffix),
-			}
-		}
-
-		return nil
-	}
-}
-
-// StrNotHasSuffix validates our string does not have the provided suffix.
-func StrNotHasSuffix(suffix string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.HasSuffix(value, suffix) {
-			return &ValidationError{
-				Message: "does have suffix",
-				Help:    fmt.Sprintf("'%v' does have unexpected suffix '%s'", value, suffix),
+				Help:    fmt.Sprintf("%q does not have expected suffix %q", value, suffix),
 			}
 		}
 
@@ -143,21 +168,7 @@ func StrContains(substr string) ValidateValue[string] {
 		if !strings.Contains(value, substr) {
 			return &ValidationError{
 				Message: "does not have substr",
-				Help:    fmt.Sprintf("'%v' does not have expected substr '%s'", value, substr),
-			}
-		}
-
-		return nil
-	}
-}
-
-// StrNotContains validates our string does not contain the provided substring.
-func StrNotContains(substr string) ValidateValue[string] {
-	return func(value string) error {
-		if strings.Contains(value, substr) {
-			return &ValidationError{
-				Message: "does have substr",
-				Help:    fmt.Sprintf("'%v' does have unexpected substr '%s'", value, substr),
+				Help:    fmt.Sprintf("%q does not have expected substr %q", value, substr),
 			}
 		}
 
@@ -171,7 +182,7 @@ func StrContainsAny(chars string) ValidateValue[string] {
 		if !strings.ContainsAny(value, chars) {
 			return &ValidationError{
 				Message: "does not have chars",
-				Help:    fmt.Sprintf("'%v' does not have any of the chars '%s'", value, chars),
+				Help:    fmt.Sprintf("%q does not have any of the chars %q", value, chars),
 			}
 		}
 
@@ -179,13 +190,55 @@ func StrContainsAny(chars string) ValidateValue[string] {
 	}
 }
 
-// StrNotContainsAny validates whether all Unicode code points in chars are not within value.
-func StrNotContainsAny(chars string) ValidateValue[string] {
+// StrMatch validates whether the value is matched by the provided regex.
+// The regex is compiled once, if the regex is invalid every validation will fail but
+// not panic.
+// Use [StrRegexp] if you want to handle compiling the regexp yourself.
+func StrMatch(reg string) ValidateValue[string] {
+	rg, err := regexp.Compile(reg)
+
 	return func(value string) error {
-		if strings.ContainsAny(value, chars) {
+		if err != nil {
 			return &ValidationError{
-				Message: "does have chars",
-				Help:    fmt.Sprintf("'%v' does have unexpected chars '%s'", value, chars),
+				Message: "regex did not compile",
+				Help:    fmt.Sprintf("%q is invalid", reg),
+			}
+		}
+
+		if !rg.MatchString(value) {
+			return &ValidationError{
+				Message: "does not match regex",
+				Help:    fmt.Sprintf("%q does not match", value),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrRegexp validates whether the value is matched by the provided regex.
+// Use [StrMatch] if you want vaddie to manage compiling the regexp.
+func StrRegexp(rg *regexp.Regexp) ValidateValue[string] {
+	return func(value string) error {
+		if !rg.MatchString(value) {
+			return &ValidationError{
+				Message: "does not match regex",
+				Help:    fmt.Sprintf("%q does not match", value),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrEmail validates whether the value is a valid email address according to RFC 5322.
+func StrEmail() ValidateValue[string] {
+	return func(value string) error {
+		_, err := mail.ParseAddress(value)
+		if err != nil {
+			return &ValidationError{
+				Message: "is not an email",
+				Help:    fmt.Sprintf("%q not a valid email", value),
 			}
 		}
 
