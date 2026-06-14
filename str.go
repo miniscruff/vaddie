@@ -2,6 +2,7 @@ package vaddie
 
 import (
 	"fmt"
+	"net/mail"
 	"regexp"
 	"strings"
 	"unicode"
@@ -223,6 +224,21 @@ func StrRegexp(rg *regexp.Regexp) ValidateValue[string] {
 			return &ValidationError{
 				Message: "does not match regex",
 				Help:    fmt.Sprintf("%q does not match", value),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrEmail validates whether the value is a valid email address according to RFC 5322.
+func StrEmail() ValidateValue[string] {
+	return func(value string) error {
+		_, err := mail.ParseAddress(value)
+		if err != nil {
+			return &ValidationError{
+				Message: "is not an email",
+				Help:    fmt.Sprintf("%q not a valid email", value),
 			}
 		}
 

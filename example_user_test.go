@@ -21,7 +21,7 @@ func (u *User) Validate() error {
 		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.Age, "age", v.OrderedGte(0), v.OrderedLte(130)),
-		v.AllOf(u.Email, "email", v.Not(v.StrEmpty())), // no email check
+		v.AllOf(u.Email, "email", v.StrEmail()),
 		v.AllOf(u.FavoriteColor, "favorite_color",
 			v.Not(v.StrEmpty()),
 		),

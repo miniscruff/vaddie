@@ -89,6 +89,16 @@ var strTests = []TestCase[string]{
 		InvalidValues: []string{"def", "ABCD", "01234"},
 		Validation:    StrMatch("..**\\("),
 	},
+	{
+		Name: "email",
+		ValidValues: []string{
+			"thing@gmail.com",
+			"test.withdot@hotmail.com",
+			"test+withplus@yahoo.com",
+		},
+		InvalidValues: []string{"def", "ABCD", "01234"},
+		Validation:    StrEmail(),
+	},
 }
 
 func Test_Strings(t *testing.T) {
