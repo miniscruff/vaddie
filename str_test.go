@@ -20,15 +20,27 @@ var strTests = []TestCase[string]{
 	},
 	{
 		Name:          "min",
-		ValidValues:   []string{"abcdefg"},
+		ValidValues:   []string{"abcdefg", "🐈🐕🐢⏰🐦"},
 		InvalidValues: []string{"ab"},
 		Validation:    StrMin(5),
 	},
 	{
 		Name:          "max",
 		ValidValues:   []string{"abc"},
-		InvalidValues: []string{"abcdefg"},
+		InvalidValues: []string{"abcdefg", "🐈🐕🐢⏰🐦"},
 		Validation:    StrMax(5),
+	},
+	{
+		Name:          "unicode min",
+		ValidValues:   []string{"abcdefg", "🐈🐕🐢⏰🐦🐈🐕🐢⏰🐦"},
+		InvalidValues: []string{"ab", "🐈"},
+		Validation:    StrUnicodeMin(5),
+	},
+	{
+		Name:          "unicode max",
+		ValidValues:   []string{"🐈🐕🐢⏰🐦"},
+		InvalidValues: []string{"🐈🐕🐢⏰🐦🐈🐕🐢⏰🐦"},
+		Validation:    StrUnicodeMax(8),
 	},
 	{
 		Name:          "letters",

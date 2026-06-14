@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 )
 
 // StrEmpty validates our value is empty.
@@ -60,6 +61,38 @@ func StrMax(maxLength int) ValidateValue[string] {
 		if length > maxLength {
 			return &ValidationError{
 				Message: "too long",
+				Help:    fmt.Sprintf("%d > %d", length, maxLength),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrUnicodeMin validates our value is at least a minimum length of unicode characters.
+// This properly compares strings that include things such as emojis and CJK symbols.
+func StrUnicodeMin(minLength int) ValidateValue[string] {
+	return func(value string) error {
+		length := utf8.RuneCountInString(value)
+		if length < minLength {
+			return &ValidationError{
+				Message: "unicode length too short",
+				Help:    fmt.Sprintf("%d < %d", length, minLength),
+			}
+		}
+
+		return nil
+	}
+}
+
+// StrUnicodeMax validates our value is no more then a maximum length of unicode characters.
+// This properly compares strings that include things such as emojis and CJK symbols.
+func StrUnicodeMax(maxLength int) ValidateValue[string] {
+	return func(value string) error {
+		length := utf8.RuneCountInString(value)
+		if length > maxLength {
+			return &ValidationError{
+				Message: "unicode length too long",
 				Help:    fmt.Sprintf("%d > %d", length, maxLength),
 			}
 		}
