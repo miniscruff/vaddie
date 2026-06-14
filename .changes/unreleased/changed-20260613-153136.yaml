@@ -1,5 +1,0 @@
-kind: changed
-body: OneOf now validates exactly one validation passes
-time: 2026-06-13T15:31:36.216444345-07:00
-custom:
-    Issue: "40"
