@@ -1,5 +1,0 @@
-kind: removed
-body: StrNotContains validation, use Not(StrContains)
-time: 2026-06-13T16:54:24.288869853-07:00
-custom:
-    Issue: "44"

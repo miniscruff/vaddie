@@ -1,5 +1,0 @@
-kind: removed
-body: StrNotHasPrefix validation, use Not(StrHasPrefix)
-time: 2026-06-13T16:53:38.267896899-07:00
-custom:
-    Issue: "44"
