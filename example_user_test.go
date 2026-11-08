@@ -73,7 +73,7 @@ func Example() {
 	}
 
 	fmt.Printf("validating user:\n%v\n", user.Validate())
-	// Output
+	// Output:
 	// validating user:
 	// <nil>
 }

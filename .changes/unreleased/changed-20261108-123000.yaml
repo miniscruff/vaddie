@@ -1,0 +1,5 @@
+kind: changed
+body: Minimum Go version is now 1.26
+time: 2026-11-08T12:30:00.000000000-08:00
+custom:
+    Issue: "53"

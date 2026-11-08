@@ -7,11 +7,14 @@ on:
     paths:
       - '.github/workflows/**'
       - '**/*.go'
+      - 'go.mod'
   pull_request:
     branches:
       - main
     paths:
+      - '.github/workflows/**'
       - '**/*.go'
+      - 'go.mod'
 
 jobs:
 
@@ -32,7 +35,7 @@ jobs:
         with:
           # Required: the version of golangci-lint is required and must be specified
           # without patch version: we always use the latest patch version.
-          version: 'v2.6'
+          version: 'v2.15'
 
       - name: Test
         run: |
