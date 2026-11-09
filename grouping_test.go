@@ -9,7 +9,7 @@ type groupTestThing struct {
 	Y int
 }
 
-var groupingTests = []GroupTestCase[groupTestThing]{
+var groupingTests = []TestCase[groupTestThing]{
 	{
 		Name: "join and all of",
 		ValidValues: []groupTestThing{
@@ -119,15 +119,15 @@ type testPosition struct {
 	Y *int
 }
 
-var optionalTests = []GroupTestCase[testPosition]{
+var optionalTests = []TestCase[testPosition]{
 	{
 		Name: "optionals",
 		ValidValues: []testPosition{
-			{X: toPtr(5), Y: toPtr(50)},
+			{X: new(5), Y: new(50)},
 			{X: nil, Y: nil},
 		},
 		InvalidValues: []testPosition{
-			{X: toPtr(10), Y: toPtr(10)},
+			{X: new(10), Y: new(10)},
 		},
 		Validation: func(v testPosition) error {
 			return Join(
@@ -139,10 +139,10 @@ var optionalTests = []GroupTestCase[testPosition]{
 	{
 		Name: "required",
 		ValidValues: []testPosition{
-			{X: toPtr(5), Y: toPtr(50)},
+			{X: new(5), Y: new(50)},
 		},
 		InvalidValues: []testPosition{
-			{X: toPtr(10), Y: toPtr(10)},
+			{X: new(10), Y: new(10)},
 			{X: nil, Y: nil},
 		},
 		Validation: func(v testPosition) error {
@@ -162,7 +162,7 @@ func (v thingWithValidate) Validate() error {
 	return AllOf(v.X, "x", OrderedEq(7))
 }
 
-var thingWithValidates = []GroupTestCase[*thingWithValidate]{
+var thingWithValidates = []TestCase[*thingWithValidate]{
 	{
 		Name: "optional with validate",
 		ValidValues: []*thingWithValidate{

@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-var sliceIntTests = []SliceTestCase[int]{
+var sliceIntTests = []TestCase[[]int]{
 	{
 		Name:          "min",
 		ValidValues:   [][]int{{15, 18}},
@@ -64,7 +64,7 @@ func (t sliceTestThing) Validate() error {
 	)
 }
 
-var sliceGroupTests = []GroupTestCase[[]sliceTestThing]{
+var sliceGroupTests = []TestCase[[]sliceTestThing]{
 	{
 		Name: "all",
 		ValidValues: [][]sliceTestThing{
@@ -110,20 +110,13 @@ func Test_SliceGroups(t *testing.T) {
 	}
 }
 
-func Test_DiveValid(t *testing.T) {
-	validValues := []string{"a", "b", "c"}
-
-	err := All(validValues, "things", Dive(StrLetters()))
-	if err != nil {
-		t.Errorf("unexpected error for valid values: %v", err)
-	}
-}
-
-func Test_DiveInvalid(t *testing.T) {
-	validValues := []string{"a", "b", "c", "5"}
-
-	err := All(validValues, "things", Dive(StrLetters()))
-	if err == nil {
-		t.Errorf("expected error for invalid values: %v", err)
-	}
+func Test_Dive(t *testing.T) {
+	TestCase[[]string]{
+		Name:          "dive",
+		ValidValues:   [][]string{{"a", "b", "c"}},
+		InvalidValues: [][]string{{"a", "b", "c", "5"}},
+		Validation: func(values []string) error {
+			return All(values, "things", Dive(StrLetters()))
+		},
+	}.Run(t)
 }
