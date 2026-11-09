@@ -1,0 +1,5 @@
+kind: changed
+body: TimeBefore and TimeAfter no longer accept a time equal to the bound, use TimeBeforeEq or TimeAfterEq
+time: 2026-11-08T18:05:00.000000000-08:00
+custom:
+    Issue: "56"

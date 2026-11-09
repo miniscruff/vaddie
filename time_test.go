@@ -13,16 +13,48 @@ var timeTests = []TestCase[time.Time]{
 		Validation:    TimeEq(time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC)),
 	},
 	{
-		Name:          "before",
-		ValidValues:   []time.Time{time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC)},
-		InvalidValues: []time.Time{time.Date(2025, time.January, 25, 5, 0, 0, 0, time.UTC)},
-		Validation:    TimeBefore(time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC)),
+		Name: "before",
+		ValidValues: []time.Time{
+			time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC),
+		},
+		InvalidValues: []time.Time{
+			time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC),
+			time.Date(2025, time.January, 25, 5, 0, 0, 0, time.UTC),
+		},
+		Validation: TimeBefore(time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC)),
 	},
 	{
-		Name:          "after",
-		ValidValues:   []time.Time{time.Date(2025, time.January, 25, 5, 0, 0, 0, time.UTC)},
-		InvalidValues: []time.Time{time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC)},
-		Validation:    TimeAfter(time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC)),
+		Name: "before or equal",
+		ValidValues: []time.Time{
+			time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC),
+			time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC),
+		},
+		InvalidValues: []time.Time{
+			time.Date(2025, time.January, 25, 5, 0, 0, 0, time.UTC),
+		},
+		Validation: TimeBeforeEq(time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC)),
+	},
+	{
+		Name: "after",
+		ValidValues: []time.Time{
+			time.Date(2025, time.January, 25, 5, 0, 0, 0, time.UTC),
+		},
+		InvalidValues: []time.Time{
+			time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC),
+			time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC),
+		},
+		Validation: TimeAfter(time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC)),
+	},
+	{
+		Name: "after or equal",
+		ValidValues: []time.Time{
+			time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC),
+			time.Date(2025, time.January, 25, 5, 0, 0, 0, time.UTC),
+		},
+		InvalidValues: []time.Time{
+			time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC),
+		},
+		Validation: TimeAfterEq(time.Date(2025, time.January, 20, 5, 0, 0, 0, time.UTC)),
 	},
 }
 
