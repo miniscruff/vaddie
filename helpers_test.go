@@ -10,73 +10,17 @@ type TestCase[T any] struct {
 	Name          string
 	ValidValues   []T
 	InvalidValues []T
-	Validation    ValidateValue[T]
+	Validation    func(T) error
 }
 
 func (c TestCase[T]) Run(t *testing.T) {
 	t.Helper()
 
 	for _, value := range c.ValidValues {
-		then.Valid(t, c.Validation, value)
+		then.Valid(t, c.Name, c.Validation, value)
 	}
 
 	for _, value := range c.InvalidValues {
-		then.Invalid(t, c.Validation, value)
+		then.Invalid(t, c.Name, c.Validation, value)
 	}
-}
-
-type SliceTestCase[T any] struct {
-	Name          string
-	ValidValues   [][]T
-	InvalidValues [][]T
-	Validation    ValidateSlice[T]
-}
-
-func (c SliceTestCase[T]) Run(t *testing.T) {
-	t.Helper()
-
-	t.Run(c.Name+"_valid", func(t *testing.T) {
-		for _, validValue := range c.ValidValues {
-			if err := c.Validation(validValue); err != nil {
-				t.Errorf("unexpected error with value '%v': %v", validValue, err)
-			}
-		}
-	})
-
-	t.Run(c.Name+"_invalid", func(t *testing.T) {
-		for _, invalidValue := range c.InvalidValues {
-			if err := c.Validation(invalidValue); err == nil {
-				t.Errorf("expected error with invalid value '%v': %v", invalidValue, err)
-			}
-		}
-	})
-}
-
-type GroupTestCase[T any] struct {
-	Name          string
-	ValidValues   []T
-	InvalidValues []T
-	Validation    func(v T) error
-}
-
-func (c GroupTestCase[T]) Run(t *testing.T) {
-	t.Run(c.Name+"_valid", func(t *testing.T) {
-		for _, validValue := range c.ValidValues {
-			if err := c.Validation(validValue); err != nil {
-				t.Errorf("unexpected error with value '%v': %v", validValue, err)
-			}
-		}
-	})
-
-	t.Run(c.Name+"_invalid", func(t *testing.T) {
-		for _, invalidValue := range c.InvalidValues {
-			if err := c.Validation(invalidValue); err == nil {
-				t.Errorf("expected error with invalid value '%v': %v", invalidValue, err)
-			}
-		}
-	})
-}
-
-func toPtr[T any](value T) *T {
-	return &value
 }

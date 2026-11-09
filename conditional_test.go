@@ -2,7 +2,7 @@ package vaddie
 
 import "testing"
 
-var ifTests = []GroupTestCase[int]{
+var ifTests = []TestCase[int]{
 	{
 		Name:          "if true",
 		ValidValues:   []int{13, 18, 5},

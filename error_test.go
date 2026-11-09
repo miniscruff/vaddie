@@ -3,19 +3,17 @@ package vaddie
 import (
 	"errors"
 	"testing"
+
+	"github.com/miniscruff/vaddie/then"
 )
 
 func Test_JoinAndWithError(t *testing.T) {
 	a := errors.New("a")
-	if JoinAnd(nil, a, nil) != a {
-		t.Fail()
-	}
+	then.Equals(t, a, JoinAnd(nil, a, nil))
 }
 
 func Test_JoinAndNoError(t *testing.T) {
-	if JoinAnd(nil, nil) != nil {
-		t.Fail()
-	}
+	then.Nil(t, JoinAnd(nil, nil))
 }
 
 func Test_ValidationError_Message(t *testing.T) {
@@ -46,13 +44,11 @@ func Test_ValidationError_Message(t *testing.T) {
 				Key:     "whichThing",
 				Message: "should be fixed",
 				Help:    "keep it in check",
-				Index:   toPtr(5),
+				Index:   new(5),
 			},
 			msg: "whichThing[5] should be fixed ( keep it in check )",
 		},
 	} {
-		if tc.err.Error() != tc.msg {
-			t.Errorf("%v != %v", tc.err.Error(), tc.msg)
-		}
+		then.Equals(t, tc.msg, tc.err.Error())
 	}
 }
