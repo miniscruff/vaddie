@@ -8,10 +8,16 @@ import (
 
 var timeTests = []TestCase[time.Time]{
 	{
-		Name:          "equals",
-		ValidValues:   []time.Time{time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC)},
-		InvalidValues: []time.Time{time.Date(2025, time.January, 15, 5, 0, 0, 0, time.UTC)},
-		Validation:    TimeEq(time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC)),
+		Name: "equals",
+		ValidValues: []time.Time{
+			time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC),
+			time.Date(2025, time.January, 10, 7, 0, 0, 0, time.FixedZone("UTC+2", 2*60*60)),
+		},
+		InvalidValues: []time.Time{
+			time.Date(2025, time.January, 15, 5, 0, 0, 0, time.UTC),
+			time.Date(2025, time.January, 10, 5, 0, 0, 0, time.FixedZone("UTC+2", 2*60*60)),
+		},
+		Validation: TimeEq(time.Date(2025, time.January, 10, 5, 0, 0, 0, time.UTC)),
 	},
 	{
 		Name: "before",

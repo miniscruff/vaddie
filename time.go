@@ -5,10 +5,11 @@ import (
 	"time"
 )
 
-// TimeEq validates our time is equal to the provided time.
+// TimeEq validates our time is the same instant as the provided time.
+// Times in different locations are equal if they represent the same instant.
 func TimeEq(value time.Time) ValidateValue[time.Time] {
 	return func(t time.Time) error {
-		if value != t {
+		if !t.Equal(value) {
 			return &ValidationError{
 				Message: "times are not equal",
 				Help:    fmt.Sprintf("'%v' != '%v'", t, value),
