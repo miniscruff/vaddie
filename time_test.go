@@ -174,3 +174,115 @@ func Test_RelativeTimeReadsNowOnValidate(t *testing.T) {
 		})
 	}
 }
+
+func Test_TimeMessages(t *testing.T) {
+	// Time inside a bubble starts at this instant.
+	start := time.Date(2000, time.January, 1, 0, 0, 0, 0, time.UTC)
+	plusTwo := time.FixedZone("UTC+2", 2*60*60)
+
+	const (
+		yearEnd  = `"1999-12-31 23:00:00 +0000 UTC"`
+		midnight = `"2000-01-01 00:00:00 +0000 UTC"`
+		oneAM    = `"2000-01-01 01:00:00 +0000 UTC"`
+		nextDay  = `"2000-01-02 00:00:00 +0000 UTC"`
+		twoDays  = `"2000-01-03 00:00:00 +0000 UTC"`
+		monthAgo = `"1999-12-02 00:00:00 +0000 UTC"`
+		inZone   = `"2000-01-01 02:00:00 +0200 UTC+2"`
+	)
+
+	testCases := []struct {
+		Name       string
+		Validation ValidateValue[time.Time]
+		Value      time.Time
+		Want       string
+	}{
+		{
+			Name:       "eq",
+			Validation: TimeEq(start),
+			Value:      start.Add(time.Hour),
+			Want:       `t times are not equal ( ` + oneAM + ` != ` + midnight + ` )`,
+		},
+		{
+			Name:       "before",
+			Validation: TimeBefore(start),
+			Value:      start.Add(time.Hour),
+			Want:       `t time is not before ( ` + oneAM + ` is not before ` + midnight + ` )`,
+		},
+		{
+			Name:       "before eq",
+			Validation: TimeBeforeEq(start),
+			Value:      start.Add(time.Hour),
+			Want:       `t time is not before or equal ( ` + oneAM + ` is after ` + midnight + ` )`,
+		},
+		{
+			Name:       "after",
+			Validation: TimeAfter(start),
+			Value:      start.Add(-time.Hour),
+			Want:       `t time is not after ( ` + yearEnd + ` is not after ` + midnight + ` )`,
+		},
+		{
+			Name:       "after eq",
+			Validation: TimeAfterEq(start),
+			Value:      start.Add(-time.Hour),
+			Want:       `t time is not after or equal ( ` + yearEnd + ` is before ` + midnight + ` )`,
+		},
+		{
+			Name:       "before now",
+			Validation: TimeBeforeNow(),
+			Value:      start.Add(time.Hour),
+			Want:       `t time is not before now ( ` + oneAM + ` is not before ` + midnight + ` )`,
+		},
+		{
+			Name:       "after now",
+			Validation: TimeAfterNow(),
+			Value:      start.Add(-time.Hour),
+			Want:       `t time is not after now ( ` + yearEnd + ` is not after ` + midnight + ` )`,
+		},
+		{
+			Name:       "before from now",
+			Validation: TimeBeforeFromNow(24 * time.Hour),
+			Value:      start.Add(48 * time.Hour),
+			Want:       `t time is not before 24h0m0s from now ( ` + twoDays + ` is not before ` + nextDay + ` )`,
+		},
+		{
+			Name:       "after from now",
+			Validation: TimeAfterFromNow(24 * time.Hour),
+			Value:      start.Add(time.Hour),
+			Want:       `t time is not after 24h0m0s from now ( ` + oneAM + ` is not after ` + nextDay + ` )`,
+		},
+		{
+			Name:       "before ago",
+			Validation: TimeBeforeFromNow(-720 * time.Hour),
+			Value:      start.Add(time.Hour),
+			Want:       `t time is not before 720h0m0s ago ( ` + oneAM + ` is not before ` + monthAgo + ` )`,
+		},
+		{
+			Name:       "after ago",
+			Validation: TimeAfterFromNow(-time.Hour),
+			Value:      start.Add(-2 * time.Hour),
+			Want: `t time is not after 1h0m0s ago ( "1999-12-31 22:00:00 +0000 UTC" is not after ` +
+				yearEnd + ` )`,
+		},
+		{
+			Name:       "bound uses the location of the value",
+			Validation: TimeBeforeNow(),
+			Value:      start.In(plusTwo),
+			Want:       `t time is not before now ( ` + inZone + ` is not before ` + inZone + ` )`,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.Name, func(t *testing.T) {
+			synctest.Test(t, func(t *testing.T) {
+				err := AllOf(tc.Value, "t", tc.Validation)
+				if err == nil {
+					t.Fatal("expected an error")
+				}
+
+				if err.Error() != tc.Want {
+					t.Errorf("message\n got: %v\nwant: %v", err, tc.Want)
+				}
+			})
+		})
+	}
+}
