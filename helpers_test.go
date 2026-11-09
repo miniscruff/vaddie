@@ -17,21 +17,17 @@ type TestCase[T any] struct {
 func (c TestCase[T]) Run(t *testing.T) {
 	t.Helper()
 
-	t.Run(c.Name+"_valid", func(t *testing.T) {
-		for _, value := range c.ValidValues {
-			t.Run(fmt.Sprint(value), func(t *testing.T) {
-				then.Nil(t, c.Validation(value))
-			})
-		}
-	})
+	for _, value := range c.ValidValues {
+		t.Run(c.Name+"_valid/"+fmt.Sprint(value), func(t *testing.T) {
+			then.Nil(t, c.Validation(value))
+		})
+	}
 
-	t.Run(c.Name+"_invalid", func(t *testing.T) {
-		for _, value := range c.InvalidValues {
-			t.Run(fmt.Sprint(value), func(t *testing.T) {
-				then.NotNil(t, c.Validation(value))
-			})
-		}
-	})
+	for _, value := range c.InvalidValues {
+		t.Run(c.Name+"_invalid/"+fmt.Sprint(value), func(t *testing.T) {
+			then.NotNil(t, c.Validation(value))
+		})
+	}
 }
 
 type SliceTestCase[T any] struct {
