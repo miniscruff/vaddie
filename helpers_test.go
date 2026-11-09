@@ -1,7 +1,6 @@
 package vaddie
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/miniscruff/vaddie/then"
@@ -18,15 +17,11 @@ func (c TestCase[T]) Run(t *testing.T) {
 	t.Helper()
 
 	for _, value := range c.ValidValues {
-		t.Run(c.Name+"_valid/"+fmt.Sprint(value), func(t *testing.T) {
-			then.Nil(t, c.Validation(value))
-		})
+		then.Valid(t, c.Validation, value)
 	}
 
 	for _, value := range c.InvalidValues {
-		t.Run(c.Name+"_invalid/"+fmt.Sprint(value), func(t *testing.T) {
-			then.NotNil(t, c.Validation(value))
-		})
+		then.Invalid(t, c.Validation, value)
 	}
 }
 
