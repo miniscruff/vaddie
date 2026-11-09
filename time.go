@@ -74,3 +74,33 @@ func TimeAfterEq(after time.Time) ValidateValue[time.Time] {
 		return nil
 	}
 }
+
+// TimeBeforeNow validates our time comes before the current time.
+// The current time is read on each validation.
+func TimeBeforeNow() ValidateValue[time.Time] {
+	return TimeBeforeFromNow(0)
+}
+
+// TimeAfterNow validates our time comes after the current time.
+// The current time is read on each validation.
+func TimeAfterNow() ValidateValue[time.Time] {
+	return TimeAfterFromNow(0)
+}
+
+// TimeBeforeFromNow validates our time comes before the current time plus the offset.
+// A negative offset looks into the past.
+// The current time is read on each validation.
+func TimeBeforeFromNow(offset time.Duration) ValidateValue[time.Time] {
+	return func(t time.Time) error {
+		return TimeBefore(time.Now().Add(offset))(t)
+	}
+}
+
+// TimeAfterFromNow validates our time comes after the current time plus the offset.
+// A negative offset looks into the past.
+// The current time is read on each validation.
+func TimeAfterFromNow(offset time.Duration) ValidateValue[time.Time] {
+	return func(t time.Time) error {
+		return TimeAfter(time.Now().Add(offset))(t)
+	}
+}

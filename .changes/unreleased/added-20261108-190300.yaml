@@ -1,0 +1,5 @@
+kind: added
+body: TimeBeforeFromNow validation
+time: 2026-11-08T19:03:00.000000000-08:00
+custom:
+    Issue: "62"
