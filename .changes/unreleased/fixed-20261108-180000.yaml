@@ -1,5 +1,0 @@
-kind: fixed
-body: TimeEq now compares instants, so the same time in different locations is equal
-time: 2026-11-08T18:00:00.000000000-08:00
-custom:
-    Issue: "55"
