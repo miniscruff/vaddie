@@ -8,7 +8,7 @@ var ifTests = []GroupTestCase[int]{
 		ValidValues:   []int{13, 18, 5},
 		InvalidValues: []int{3, 1},
 		Validation: func(v int) error {
-			return IfExp(true,
+			return If(true,
 				AllOf(v, "v", OrderedGte(5)),
 			)
 		},
@@ -17,7 +17,7 @@ var ifTests = []GroupTestCase[int]{
 		Name:        "if false",
 		ValidValues: []int{2, 5, 18},
 		Validation: func(v int) error {
-			return IfExp(false,
+			return If(false,
 				AllOf(v, "v", OrderedGte(5)),
 			)
 		},
