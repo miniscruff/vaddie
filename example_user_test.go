@@ -22,7 +22,7 @@ func (u *User) Validate() error {
 		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
 		v.AllOf(u.Age, "age", v.OrderedGte(0), v.OrderedLte(130)),
-		v.IfExp(u.Age < 18,
+		v.If(u.Age < 18,
 			v.AllOf(u.SignedWaiver, "signed_waiver", v.ComparableEq(true)),
 		),
 		v.AllOf(u.Email, "email", v.StrEmail()),
