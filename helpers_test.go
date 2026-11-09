@@ -1,7 +1,10 @@
 package vaddie
 
 import (
+	"fmt"
 	"testing"
+
+	"github.com/miniscruff/vaddie/then"
 )
 
 type TestCase[T any] struct {
@@ -15,18 +18,18 @@ func (c TestCase[T]) Run(t *testing.T) {
 	t.Helper()
 
 	t.Run(c.Name+"_valid", func(t *testing.T) {
-		for _, validValue := range c.ValidValues {
-			if err := c.Validation(validValue); err != nil {
-				t.Errorf("unexpected error with value '%v': %v", validValue, err)
-			}
+		for _, value := range c.ValidValues {
+			t.Run(fmt.Sprint(value), func(t *testing.T) {
+				then.Nil(t, c.Validation(value))
+			})
 		}
 	})
 
 	t.Run(c.Name+"_invalid", func(t *testing.T) {
-		for _, invalidValue := range c.InvalidValues {
-			if err := c.Validation(invalidValue); err == nil {
-				t.Errorf("expected error with invalid value '%v': %v", invalidValue, err)
-			}
+		for _, value := range c.InvalidValues {
+			t.Run(fmt.Sprint(value), func(t *testing.T) {
+				then.NotNil(t, c.Validation(value))
+			})
 		}
 	})
 }
