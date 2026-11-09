@@ -1,6 +1,6 @@
 # Vaddie
 
-[![Go Packge](https://img.shields.io/badge/Go-Reference-grey?style=for-the-badge&logo=go&logoColor=white&label=%20&labelColor=007D9C)](https://pkg.go.dev/github.com/miniscruff/vaddie)
+[![Go Package](https://img.shields.io/badge/Go-Reference-grey?style=for-the-badge&logo=go&logoColor=white&label=%20&labelColor=007D9C)](https://pkg.go.dev/github.com/miniscruff/vaddie)
 [![GitHub release](https://img.shields.io/github/v/release/miniscruff/vaddie?style=for-the-badge&logo=github)](https://github.com/miniscruff/vaddie/releases)
 [![GitHub License](https://img.shields.io/github/license/miniscruff/vaddie?style=for-the-badge)](https://github.com/miniscruff/vaddie/blob/main/LICENSE)
 
@@ -13,7 +13,7 @@ Validation library using type safe, developer friendly and extendible functions.
 
 ## Support
 
-Currently experimental, valdiations will be added, changed or removed.
+Currently experimental, validations will be added, changed or removed.
 New validations may be added with `Exp` prefixes indicating they are still experimental.
 
 ## Examples
@@ -30,22 +30,22 @@ import (
 )
 
 type User struct {
-	FirstName     string     `json:"firstName"`
-	LastName      string     `json:"lastName"`
-	Age           uint8      `json:"age"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Age       uint8  `json:"age"`
 }
 
 func main() {
 	user := &User{
-		FirstName:     "Badger",
-		LastName:      "Smith",
-		Age:           45,
-    }
-    err := v.Join(
-		v.AllOf(u.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
-		v.AllOf(u.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
-		v.AllOf(u.Age, "age", v.OrderedGte(uint8(0)), v.OrderedLte(uint8(130))),
-    )
+		FirstName: "Badger",
+		LastName:  "Smith",
+		Age:       45,
+	}
+	err := v.Join(
+		v.AllOf(user.FirstName, "first_name", v.StrMin(2), v.StrMax(64)),
+		v.AllOf(user.LastName, "last_name", v.StrMin(2), v.StrMax(64)),
+		v.AllOf(user.Age, "age", v.OrderedGte(uint8(0)), v.OrderedLte(uint8(130))),
+	)
 
 	fmt.Printf("validating user:\n%v\n", err)
 }

@@ -56,7 +56,7 @@ formatters:
       sections:
         - standard
         - default
-        - prefix(github.com/org/project)
+        - prefix(github.com/miniscruff/vaddie)
         - blank
         - dot
         - alias
